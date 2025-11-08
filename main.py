@@ -52,19 +52,19 @@ from params import *
 # In[6]:
 
 
-for i in range(1):
-    num_shots = 1024*2**i
-    with open('data/step2_epsilon' + str(epsilon)[0] + str(epsilon)[2] + '_count' + str(num_shots) + '_no_noise_knitted.pkl', 'wb') as file:
-        pickle.dump(circuit_knitter(trot_step_2, 0, 10, num_shots), file, protocol=pickle.HIGHEST_PROTOCOL)
+# for i in range(11):
+#     num_shots = 1024*2**i
+#     with open('data/step2_epsilon' + str(epsilon)[0] + str(epsilon)[2] + '_count' + str(num_shots) + '_no_noise_knitted.pkl', 'wb') as file:
+#         pickle.dump(circuit_knitter(trot_step_2, 0, 10, num_shots), file, protocol=pickle.HIGHEST_PROTOCOL)
 
 
 # In[7]:
 
 
-# for i in range(11):
-#     num_shots = 1024*2**i
-#     with open('data/step2_epsilon' + str(epsilon)[0] + str(epsilon)[2] + '_count' + str(num_shots) + '_no_noise_knitted.pkl', 'wb') as file:
-#         pickle.dump(circuit_knitter(trot_step_2, 0, 10, num_shots), file, protocol=pickle.HIGHEST_PROTOCOL)
+for i in range(11):
+    num_shots = 1024*2**i
+    with open('data/step2_epsilon' + str(epsilon)[0] + str(epsilon)[2] + '_count' + str(num_shots) + '_with_noise_knitted.pkl', 'wb') as file:
+        pickle.dump(circuit_knitter(trot_step_2, 0, 10, num_shots, noise=True), file, protocol=pickle.HIGHEST_PROTOCOL)
 
 
 # In[8]:
