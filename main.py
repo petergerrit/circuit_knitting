@@ -70,20 +70,20 @@ from params import *
 # In[ ]:
 
 
-# for i in range(3):
-#     num_shots = 1024
-#     epsilon = np.round(0.2*(1+i), 1)
-#     circuit = trotter_stepper(1, Nqbits, epsilon, mass, mid).decompose().decompose()
-#     circuit.measure_all()
-#     with open('data/step1_epsilon' + str(epsilon)[0] + str(epsilon)[2] + '_count' + str(num_shots) + '_with_noise_knitted.pkl', 'wb') as file:
-#          pickle.dump(circuit_knitter(circuit, 0, 10, num_shots, noise=True), file, protocol=pickle.HIGHEST_PROTOCOL)
+for i in range(3):
+    num_shots = 131072
+    epsilon = np.round(0.2*(1+i), 1)
+    circuit = trotter_stepper(1, Nqbits, epsilon, mass, mid).decompose().decompose()
+    circuit.measure_all()
+    with open('data/step1_epsilon' + str(epsilon)[0] + str(epsilon)[2] + '_count' + str(num_shots) + '_with_noise_knitted.pkl', 'wb') as file:
+         pickle.dump(circuit_knitter(circuit, 0, 10, num_shots, noise=True), file, protocol=pickle.HIGHEST_PROTOCOL)
 
 
 # In[ ]:
 
 
 for i in range(3):
-    num_shots = 1024
+    num_shots = 65536
     epsilon = np.round((5+i)*0.1, 1)
     circuit = trotter_stepper(2, Nqbits, epsilon, mass, mid).decompose().decompose()
     circuit.measure_all()
