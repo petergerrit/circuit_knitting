@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[2]:
 
 
 import import_ipynb
@@ -21,117 +21,86 @@ from functions import *
 from params import *
 
 
-# In[2]:
-
-
-# Nqbits = 6
-# Ntsteps = 3
-# mid = Nqbits - 2
-# mass = 1.125
-# epsilon = 0.8
-
-
 # In[4]:
 
 
+# """ step 1, no noise, knitted, convergences as function of shots """
+# np.random.seed(1)
 # for i in range(11):
 #     num_shots = 1024*2**i
 #     with open('data/step1_epsilon' + str(epsilon)[0] + str(epsilon)[2] + '_count' + str(num_shots) + '_no_noise_knitted.pkl', 'wb') as file:
-#         pickle.dump(circuit_knitter(trot_step_1, 0, 10, num_shots), file, protocol=pickle.HIGHEST_PROTOCOL)
+#         pickle.dump(circuit_knitter(trot_step_1, 0, 10, num_shots, simulator_seed=np.random.randint(1024**2),\
+#                                                      transpiler_seed=np.random.randint(1024**2)),\
+#                     file, protocol=pickle.HIGHEST_PROTOCOL)
 
 
 # In[5]:
 
 
+# """ step 1, noisy, knitted, convergence as function of shots """
+# np.random.seed(2)
 # for i in range(11):
 #     num_shots = 1024*2**i
 #     with open('data/step1_epsilon' + str(epsilon)[0] + str(epsilon)[2] + '_count' + str(num_shots) + '_with_noise_knitted.pkl', 'wb') as file:
-#         pickle.dump(circuit_knitter(trot_step_1, 0, 10, num_shots, noise=True), file, protocol=pickle.HIGHEST_PROTOCOL)
+#         pickle.dump(circuit_knitter(trot_step_1, 0, 10, num_shots, noise=True, simulator_seed=np.random.randint(1024**2),\
+#                                                      transpiler_seed=np.random.randint(1024**2)),\
+#                     file, protocol=pickle.HIGHEST_PROTOCOL)
 
 
 # In[6]:
 
 
+# """ step 2, no noise, knitted, convergences as function of shots """
+# np.random.seed(3)
 # for i in range(11):
 #     num_shots = 1024*2**i
 #     with open('data/step2_epsilon' + str(epsilon)[0] + str(epsilon)[2] + '_count' + str(num_shots) + '_no_noise_knitted.pkl', 'wb') as file:
-#         pickle.dump(circuit_knitter(trot_step_2, 0, 10, num_shots), file, protocol=pickle.HIGHEST_PROTOCOL)
+#         pickle.dump(circuit_knitter(trot_step_2, 0, 10, num_shots, simulator_seed=np.random.randint(1024**2),\
+#                                                      transpiler_seed=np.random.randint(1024**2)),\
+#                     file, protocol=pickle.HIGHEST_PROTOCOL)
 
 
 # In[7]:
 
 
+# """ step 2, noisy, knitted, convergence as function of shots """
+# np.random.seed(4)
 # for i in range(11):
 #     num_shots = 1024*2**i
 #     with open('data/step2_epsilon' + str(epsilon)[0] + str(epsilon)[2] + '_count' + str(num_shots) + '_with_noise_knitted.pkl', 'wb') as file:
-#         pickle.dump(circuit_knitter(trot_step_2, 0, 10, num_shots, noise=True), file, protocol=pickle.HIGHEST_PROTOCOL)
+#         pickle.dump(circuit_knitter(trot_step_2, 0, 10, num_shots, noise=True, simulator_seed=np.random.randint(1024**2),\
+#                                                      transpiler_seed=np.random.randint(1024**2)),\
+#                     file, protocol=pickle.HIGHEST_PROTOCOL)
 
 
 # In[ ]:
 
 
-for i in range(4, 8):
+""" step 1, noisy, knitted, convergence as function of epsilon (epsilon = 0.2, 0.4, 0.6)"""
+np.random.seed(5)
+for i in range(4):
     num_shots = 131072
     epsilon = np.round(0.2*(1+i), 1)
     circuit = trotter_stepper(1, Nqbits, epsilon, mass, mid).decompose().decompose()
     circuit.measure_all()
     with open('data/step1_epsilon' + str(epsilon)[0] + str(epsilon)[2] + '_count' + str(num_shots) + '_with_noise_knitted.pkl', 'wb') as file:
-         pickle.dump(circuit_knitter(circuit, 0, 10, num_shots, noise=True), file, protocol=pickle.HIGHEST_PROTOCOL)
+         pickle.dump(circuit_knitter(circuit, 0, 10, num_shots, noise=True, simulator_seed=np.random.randint(1024**2),\
+                                                     transpiler_seed=np.random.randint(1024**2)),\
+                     file, protocol=pickle.HIGHEST_PROTOCOL)
 
 
 # In[ ]:
 
 
-# for i in range(3):
-#     num_shots = 65536
-#     epsilon = np.round((5+i)*0.1, 1)
-#     circuit = trotter_stepper(2, Nqbits, epsilon, mass, mid).decompose().decompose()
-#     circuit.measure_all()
-#     with open('data/step2_epsilon' + str(epsilon)[0] + str(epsilon)[2] + '_count' + str(num_shots) + '_with_noise_knitted.pkl', 'wb') as file:
-#          pickle.dump(circuit_knitter(circuit, 0, 10, num_shots, noise=True), file, protocol=pickle.HIGHEST_PROTOCOL)
-
-
-# In[ ]:
-
-
-# for i in range(3):
-#     num_shots = 1024*128
-#     epsilon = np.round(0.2*(1+i), 1)
-#     with open('data/step1_epsilon' + str(epsilon)[0] + str(epsilon)[2] + '_count' + str(num_shots) + '_with_noise_knitted.pkl', 'wb') as file:
-#         pickle.dump(circuit_knitter(trot_step_1, 0, 10, num_shots, noise=True), file, protocol=pickle.HIGHEST_PROTOCOL)
-
-
-# In[ ]:
-
-
-# for i in range(3):
-#     num_shots = 1024*64
-#     epsilon = np.round(0.1*(5+i), 1)
-#     with open('data/step2_epsilon' + str(epsilon)[0] + str(epsilon)[2] + '_count' + str(num_shots) + '_with_noise_knitted.pkl', 'wb') as file:
-#         pickle.dump(circuit_knitter(trot_step_2, 0, 10, num_shots, noise=True), file, protocol=pickle.HIGHEST_PROTOCOL)
-
-
-# In[8]:
-
-
-# with open('data/step1_epsilon08_count16_no_noise.pkl', 'rb') as file:
-#     temp_res = pickle.load(file)
-
-
-# In[9]:
-
-
-# fermion_number(temp_res, mid)
-
-
-# In[10]:
-
-
-# bootstrap_error(temp_res, mid, 16)
-
-
-# In[ ]:
-
-
-
+""" step 2, noisy, knitted, convergence as function of epsilon (epsilon = 0.5, 0.6, 0.7)"""
+np.random.seed(6)
+for i in range(4):
+    num_shots = 65536
+    epsilon = np.round((5+i)*0.1, 1)
+    circuit = trotter_stepper(2, Nqbits, epsilon, mass, mid).decompose().decompose()
+    circuit.measure_all()
+    with open('data/step2_epsilon' + str(epsilon)[0] + str(epsilon)[2] + '_count' + str(num_shots) + '_with_noise_knitted.pkl', 'wb') as file:
+         pickle.dump(circuit_knitter(circuit, 0, 10, num_shots, noise=True, simulator_seed=np.random.randint(1024**2),\
+                                                     transpiler_seed=np.random.randint(1024**2)),\
+                     file, protocol=pickle.HIGHEST_PROTOCOL)
 
