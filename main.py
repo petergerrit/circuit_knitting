@@ -127,21 +127,21 @@ for _ in range(10):
         epsilon = np.round(0.2*(1+i), 1)
         circuit = trotter_stepper(1, Nqbits, epsilon, mass, mid).decompose().decompose()
         circuit.measure_all()
+        res = circuit_knitter(circuit, 0, 10, num_shots, noise=True, simulator_seed=np.random.randint(1024**2),\
+                                                         transpiler_seed=np.random.randint(1024**2))
         with open('data/noisy_knitted_trotter_evol/step1_epsilon' + str(epsilon)[0] + str(epsilon)[2] +\
                   '_count' + str(num_shots) + '_with_noise_knitted_seed' + str(my_seed) + '.pkl', 'wb') as file:
-             pickle.dump(circuit_knitter(circuit, 0, 10, num_shots, noise=True, simulator_seed=np.random.randint(1024**2),\
-                                                         transpiler_seed=np.random.randint(1024**2)),\
-                         file, protocol=pickle.HIGHEST_PROTOCOL)
+             pickle.dump(res, file, protocol=pickle.HIGHEST_PROTOCOL)
     for i in range(4):
         num_shots = 16384
         epsilon = np.round((5+i)*0.1, 1)
         circuit = trotter_stepper(2, Nqbits, epsilon, mass, mid).decompose().decompose()
         circuit.measure_all()
+        res = circuit_knitter(circuit, 0, 10, num_shots, noise=True, simulator_seed=np.random.randint(1024**2),\
+                                                         transpiler_seed=np.random.randint(1024**2))
         with open('data/noisy_knitted_trotter_evol/step2_epsilon' + str(epsilon)[0] + str(epsilon)[2] +\
                   '_count' + str(num_shots) + '_with_noise_knitted' + str(my_seed) + '.pkl', 'wb') as file:
-             pickle.dump(circuit_knitter(circuit, 0, 10, num_shots, noise=True, simulator_seed=np.random.randint(1024**2),\
-                                                         transpiler_seed=np.random.randint(1024**2)),\
-                         file, protocol=pickle.HIGHEST_PROTOCOL)
+             pickle.dump(res, file, protocol=pickle.HIGHEST_PROTOCOL)
     with open('data/noisy_knitted_trotter_evol/seeds_list.txt', 'w') as file:
         for item in seeds_list:
             file.write("%s\n" % item)
