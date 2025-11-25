@@ -109,7 +109,7 @@ from params import *
 # In[ ]:
 
 
-for _ in range(10):
+for _ in range(9):
     seeds_list = []
     try:
         with open('data/noisy_knitted_trotter_evol/seeds_list.txt', 'r') as file:
