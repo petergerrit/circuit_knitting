@@ -118,7 +118,7 @@ import time
 for _ in range(10):
     seeds_list = []
     try:
-        with open('data/noisy_knitted_trotter_evol/seeds_list.txt', 'r') as file:
+        with open('data/noisy_knitted_trotter_evol/noisy_knitted_seeds_list.txt', 'r') as file:
             for line in file:
                 val = line[:-1]
                 seeds_list.append(int(val))
@@ -150,7 +150,7 @@ for _ in range(10):
     #     with open('data/noisy_knitted_trotter_evol/step2_epsilon' + str(epsilon)[0] + str(epsilon)[2] +\
     #               '_count' + str(num_shots) + '_with_noise_knitted_seed' + str(my_seed) + '.pkl', 'wb') as file:
     #          pickle.dump(res, file, protocol=pickle.HIGHEST_PROTOCOL)
-    # with open('data/noisy_knitted_trotter_evol/seeds_list.txt', 'w') as file:
-    #     for item in seeds_list:
-    #         file.write("%s\n" % item)
+    with open('data/noisy_knitted_trotter_evol/noisy_knitted_seeds_list.txt', 'w') as file:
+        for item in seeds_list:
+            file.write("%s\n" % item)
 
