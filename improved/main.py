@@ -12,7 +12,7 @@ from datetime import datetime
 
 from .config import ExperimentConfig, ensure_directories
 from .experiment import circuit_knitter, save_experiment_results
-from .circuit_utils import trotter_stepper, create_test_circuit
+from .circuit_utils import trotter_stepper, create_circuit_3q_test
 
 
 def run_convergence_experiment(

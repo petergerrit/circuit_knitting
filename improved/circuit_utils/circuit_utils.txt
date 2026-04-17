@@ -1,0 +1,26 @@
+CIRCUIT_UTILS DIRECTORY
+========================
+
+This directory contains Python modules for quantum circuit analysis and visualization.
+
+FILES:
+
+statevector_analysis.py
+- Performs ideal statevector simulations
+- Computes theoretical probabilities of circuit outcomes
+- Provides reference data for circuit knitting validation
+
+show_circuits.py
+- Displays quantum circuit diagrams
+- Shows circuit structure and measurement outcomes
+- Saves text representations of circuits
+
+show_circuit_ratios.py
+- Analyzes measurement outcomes as ratios
+- Compares theoretical vs actual circuit behavior
+- Uses statevector analysis for ideal probabilities
+
+PURPOSE:
+These utilities provide visualization and theoretical analysis to complement
+the core circuit knitting functionality. They help validate, debug, and
+understand quantum circuit behavior through ideal simulations.
