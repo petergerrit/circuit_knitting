@@ -13,7 +13,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from qiskit import QuantumCircuit
 from config import ExperimentConfig
-from experiment import run_circuit_experiment
+from knitter.execution import run_circuit_experiment
 
 
 class TestMinimalNoise(unittest.TestCase):

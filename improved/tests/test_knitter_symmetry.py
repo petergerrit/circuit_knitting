@@ -13,8 +13,8 @@ import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from config import ExperimentConfig
-from circuit_utils import create_circuit_3q_test
-from experiment import circuit_knitter
+from circuits.basic_circuits import create_circuit_3q_test
+from knitter.knitter import circuit_knitter
 
 
 class TestKnitterSymmetry(unittest.TestCase):
