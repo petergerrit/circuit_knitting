@@ -51,13 +51,16 @@ def run_all_tests():
     print("="*70)
     print(f"Started at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     
-    # List of test files to run
+    # Get the directory containing this script
+    test_dir = os.path.dirname(os.path.abspath(__file__))
+    
+    # List of test files to run with absolute paths
     test_files = [
-        'test_simulator_randomness.py',
-        'test_knitter_randomness.py',
-        'test_knitter_symmetry.py',
-        'test_simulator_noise.py',
-        'test_knitter_noise.py'
+        os.path.join(test_dir, 'test_simulator_randomness.py'),
+        os.path.join(test_dir, 'test_knitter_randomness.py'),
+        os.path.join(test_dir, 'test_knitter_symmetry.py'),
+        os.path.join(test_dir, 'test_simulator_noise.py'),
+        os.path.join(test_dir, 'test_knitter_noise.py')
     ]
     
     results = {}
