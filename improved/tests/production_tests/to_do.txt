@@ -1,0 +1,32 @@
+production tests for the first trotter step (with knitter only)
+
+==================================================
+
+SIMULATION PARAMETERS MATRIX
+
+Test | Noise | Simulator Seed | Transpiler Seed | Bootstrap Seed | Shots | Purpose
+-----|-------|----------------|-----------------|----------------|-------|-----------------
+1    | False | 42             | 42              | 42             | 1024  | Baseline noiseless
+2    | True  | 42             | 42              | 42             | 1024  | Noise effect
+3    | True  | 42             | 42              | 42             | 1024  | Noise effect
+4    | True  | 123            | 123             | 42             | 1024  | Knitter randomness
+5    | True  | 42             | 42              | 123            | 1024  | Bootstrap seed independence
+
+==================================================
+
+TESTS MATRIX
+
+Comparison | Fermion Number | Bootstrap | Purpose
+-----------|----------------|-----------|--------------------------
+1 != 2     | Yes            | No        | Test noise effect
+2 == 3     | Yes            | Yes       | Test identical seed reproducibility
+2 != 4     | Yes            | No        | Test simulation seeds give different results
+2 != 5     | No             | Yes       | Test bootstrap seed gives different results
+
+==================================================
+
+TEST STATUS
+
+test_first_trotter_knitter_noise.py: Test 1 != 2 (noise effect) - MADE
+test_1st_trotter_reproducibility.py: Test 2 == 3 (identical seed reproducibility) - MADE
+All other tests: NOT MADE
