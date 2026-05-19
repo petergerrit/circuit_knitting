@@ -53,7 +53,7 @@ def run_convergence_experiment(
         np.random.seed(experiment_seed)
         
         # Create circuit for this step
-        circuit = trotter_stepper(step, config.Nqbits, epsilon, config.mass, config.mid)
+        circuit = trotter_stepper(step, config.Nqbits, epsilon, config.mass, config.insertion_point)
         
         # Run circuit knitting experiment
         results = circuit_knitter(

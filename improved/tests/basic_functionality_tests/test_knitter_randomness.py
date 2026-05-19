@@ -1,81 +1,87 @@
 #!/usr/bin/env python
 """
-Test suite for simulator randomness.
+Test suite for circuit knitter randomness.
 
-This script tests that the simulator produces different results with different seeds
-and identical results with the same seed, using a simple circuit that demonstrates
-quantum randomness clearly.
+This script tests that the circuit knitter produces different results with different seeds
+and identical results with the same seed, using the original test circuit.
 """
 
 import unittest
 import sys
 import os
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
-from qiskit import QuantumCircuit
 from config import ExperimentConfig
-from knitter.execution import run_circuit_experiment
+from circuits.basic_circuits import create_circuit_3q_test
+from knitter.knitter import circuit_knitter
 
 
-class TestSimulatorRandomness(unittest.TestCase):
-    """Test cases for simulator randomness."""
+class TestKnitterRandomness(unittest.TestCase):
+    """Test cases for circuit knitter randomness."""
     
     def setUp(self):
         """Set up test fixtures."""
         # Create a test configuration with no noise
-        self.config = ExperimentConfig(
+        self.config_no_noise = ExperimentConfig(
             noise=False,
-            num_shots=1024,  # Sufficient shots for statistical significance
+            num_shots=1024,  # Standard shots for statistical significance
             results_dir="test_results"
         )
         
-        # Create a simple circuit that will show clear quantum randomness
-        # This circuit puts all qubits in superposition and measures them
-        self.test_circuit = QuantumCircuit(3, 3)
-        self.test_circuit.h(0)  # Hadamard gate creates superposition
-        self.test_circuit.h(1)
-        self.test_circuit.h(2)
-        self.test_circuit.measure([0, 1, 2], [0, 1, 2])
+
         
-        # Display circuit diagram
+        # Use the original test circuit with random unitaries
+        self.test_circuit = create_circuit_3q_test()
+        
+    def test_knitter_randomness(self):
+        """Test that circuit knitter produces different results with different seeds and same with same seed."""
+        print("\nTesting circuit knitter randomness (no noise)...")
+        print("Using 1024 shots with the original test circuit")
+        print("Knitting qubits: control=0, target=1")
+        
+        # Display the test circuit
         print("\nTest Circuit Diagram:")
-        print(self.test_circuit.draw(output='text'))
-        
-    def test_simulator_randomness(self):
-        """Test that simulator produces different results with different seeds and same with same seed."""
-        print("\nTesting simulator randomness...")
-        print("Using 1024 shots with a simple superposition circuit")
+        print(self.test_circuit.draw(fold=-1))
         
         # First evaluation with seed 42
         seed1 = 42
         print(f"\nEvaluation 1 with seed {seed1}")
-        results1 = run_circuit_experiment(
+        results1 = circuit_knitter(
             circuit=self.test_circuit,
-            config=self.config,
+            start_qubit=0,
+            end_qubit=1,
+            num_shots=self.config_no_noise.num_shots,
+            config=self.config_no_noise,
             simulator_seed=seed1,
             transpiler_seed=seed1
-        )
+        )['results']
         print(f"Results 1: {results1}")
         
         # Second evaluation with different seed (123)
         seed2 = 123
         print(f"\nEvaluation 2 with seed {seed2}")
-        results2 = run_circuit_experiment(
+        results2 = circuit_knitter(
             circuit=self.test_circuit,
-            config=self.config,
+            start_qubit=0,
+            end_qubit=1,
+            num_shots=self.config_no_noise.num_shots,
+            config=self.config_no_noise,
             simulator_seed=seed2,
             transpiler_seed=seed2
-        )
+        )['results']
         print(f"Results 2: {results2}")
         
         # Third evaluation with original seed (42) - should match results1
         print(f"\nEvaluation 3 with seed {seed1} (same as evaluation 1)")
-        results3 = run_circuit_experiment(
+        results3 = circuit_knitter(
             circuit=self.test_circuit,
-            config=self.config,
+            start_qubit=0,
+            end_qubit=1,
+            num_shots=self.config_no_noise.num_shots,
+            config=self.config_no_noise,
             simulator_seed=seed1,
             transpiler_seed=seed1
-        )
+        )['results']
         print(f"Results 3: {results3}")
         
         # Verify reproducibility: results1 should equal results3
@@ -93,40 +99,42 @@ class TestSimulatorRandomness(unittest.TestCase):
                            "Different seeds should produce different results (3 vs 2)")
         print("✓ Randomness confirmed: results3 != results2")
         
-        print("\n✓ All simulator randomness tests passed!")
+        print("\n✓ All circuit knitter randomness tests passed (no noise)!")
+    
 
 
-def run_randomness_tests():
-    """Run randomness tests and generate a summary."""
-    print("Running Simulator Randomness Tests...")
+
+def run_knitter_randomness_tests():
+    """Run circuit knitter randomness tests and generate a summary."""
+    print("Running Circuit Knitter Randomness Tests...")
     print("=" * 55)
     
     # Create test suite
     loader = unittest.TestLoader()
-    suite = loader.loadTestsFromTestCase(TestSimulatorRandomness)
+    suite = loader.loadTestsFromTestCase(TestKnitterRandomness)
     
     # Run tests
     runner = unittest.TextTestRunner(verbosity=2)
     result = runner.run(suite)
     
     print("\n" + "=" * 55)
-    print(f"Randomness tests completed: {result.testsRun}")
+    print(f"Circuit knitter randomness tests completed: {result.testsRun}")
     print(f"Failures: {len(result.failures)}")
     print(f"Errors: {len(result.errors)}")
     
     if result.wasSuccessful():
-        print("✓ Simulator randomness verified!")
+        print("✓ Circuit knitter randomness verified!")
         print("  - Same seeds produce identical results")
         print("  - Different seeds produce different results")
     else:
-        print("✗ Simulator randomness tests failed!")
+        print("✗ Circuit knitter randomness tests failed!")
     
     return result
 
 
 if __name__ == "__main__":
-    # Run randomness tests
-    test_result = run_randomness_tests()
+    # Run circuit knitter randomness tests
+    test_result = run_knitter_randomness_tests()
     
     # Exit with appropriate code
     exit(0 if test_result.wasSuccessful() else 1)

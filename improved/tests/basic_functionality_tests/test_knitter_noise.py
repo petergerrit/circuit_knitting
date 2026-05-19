@@ -9,7 +9,7 @@ to test the circuit knitter's behavior with and without noise.
 import unittest
 import sys
 import os
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
 from qiskit import QuantumCircuit
 from config import ExperimentConfig

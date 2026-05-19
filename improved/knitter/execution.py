@@ -98,7 +98,7 @@ def my_measure(
     my_circ = QuantumCircuit(num_qubits, num_cx+num_qubits)
     for item in circuit_data:
         my_circ.append(item)
-    my_circ.measure([*range(num_qubits)], [*range(-num_qubits, 0)])
+    my_circ.measure([*range(num_qubits)], [*range(num_cx, num_cx + num_qubits)])
 
     # Select noisy or ideal backend
     if noise:
@@ -136,8 +136,10 @@ def comb_measure(result_in: Dict[str, int], conq: int, tarq: int, num_cx: int) -
     """
     result_dict = defaultdict(int)
     for item in result_in:
-        end_meas = item[:-num_cx]
-        int_meas = item[-num_cx:]
+        # FIX: Use len(item)-num_cx instead of -num_cx to handle num_cx=0 case
+        # When num_cx=0, item[:-0] returns empty string, but item[:len(item)] returns full string
+        end_meas = item[:len(item)-num_cx]
+        int_meas = item[len(item)-num_cx:]
         if end_meas[-conq-1]+end_meas[-tarq-1] == '00':
             if int_meas.count('1') % 2 == 0:
                 result_dict[end_meas] += result_in[str(item)]

@@ -21,6 +21,54 @@ except ImportError:
     from circuits.basic_circuits import prepare_circuit_for_execution
 
 
+def fully_decompose_circuit(circuit: 'QuantumCircuit', max_iterations: int = 10, preserve_unitary: bool = True) -> 'QuantumCircuit':
+    """
+    Recursively decompose a quantum circuit until all gates are basis gates.
+    
+    Args:
+        circuit: Input quantum circuit potentially containing composite gates
+        max_iterations: Maximum number of decomposition iterations (safety limit)
+        preserve_unitary: If True, keep unitary gates atomic (don't decompose them)
+        
+    Returns:
+        Fully decomposed quantum circuit with only basis gates
+    """
+    # List of Qiskit basis gate names
+    basis_gates = {'cx', 'h', 'x', 'y', 'z', 's', 'sdg', 't', 'tdg', 
+                   'rx', 'ry', 'rz', 'sx', 'sxdg', 'swap',
+                   'measure', 'barrier', 'reset', 'id', 'u1', 'u2', 'u3',
+                   'p', 'cp', 'ccx', 'mcx', 'r', 'rxx', 'ryy', 'rzz', 'rzx'}
+    
+    if preserve_unitary:
+        basis_gates = basis_gates | {'unitary'}
+    
+    for _ in range(max_iterations):
+        # Find gates that need decomposition (not in basis_gates)
+        gates_to_decompose = set()
+        for gate in circuit.data:
+            if gate.operation.name not in basis_gates:
+                gates_to_decompose.add(gate.operation.name)
+        
+        if not gates_to_decompose:
+            return circuit
+        
+        # Decompose only the non-basis gates
+        decomposed = circuit.decompose(gates_to_decompose=list(gates_to_decompose))
+        
+        # Check if all gates are now primitive
+        all_primitive = True
+        for gate in decomposed.data:
+            if gate.operation.name not in basis_gates:
+                all_primitive = False
+                break
+        if all_primitive:
+            return decomposed
+        circuit = decomposed
+    
+    # If we reach max iterations, return the best effort
+    return circuit
+
+
 def circuit_knitter(
     circuit: 'QuantumCircuit',
     start_qubit: int,
@@ -28,7 +76,8 @@ def circuit_knitter(
     num_shots: int,
     config: ExperimentConfig,
     simulator_seed: Optional[int] = None,
-    transpiler_seed: Optional[int] = None
+    transpiler_seed: Optional[int] = None,
+    decompose: bool = True
 ) -> Dict[str, Any]:
     """
     Perform circuit knitting on a given circuit using the full knitting algorithm.
@@ -41,10 +90,16 @@ def circuit_knitter(
         config: Experiment configuration
         simulator_seed: Random seed for simulator
         transpiler_seed: Random seed for transpiler
+        decompose: Whether to fully decompose the circuit (default True)
         
     Returns:
         Dictionary containing knitting results and metadata
     """
+    # Fully decompose the circuit to get individual gates
+    # Note: preserve_unitary=True prevents decomposing unitary gates (treats them as atomic)
+    if decompose:
+        circuit = fully_decompose_circuit(circuit, preserve_unitary=True)
+    
     conq = start_qubit
     tarq = end_qubit
     

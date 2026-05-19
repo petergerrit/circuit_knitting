@@ -18,6 +18,9 @@ class ExperimentConfig:
     simulator_seed: Optional[int] = None
     transpiler_seed: Optional[int] = None
     optimization_level: int = 3
+    Nqbits: int = 12
+    mass: float = 0.1
+    insertion_point: int = 4
 
 
 def get_config() -> ExperimentConfig:

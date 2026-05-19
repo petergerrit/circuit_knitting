@@ -41,12 +41,25 @@ def create_circuit_3q_test() -> QuantumCircuit:
     return qc
 
 
-def trotter_stepper(step: int, n_qubits: int, epsilon: float, mass: float, mid: int) -> QuantumCircuit:
-    """Create a Trotter step circuit."""
-    # Implementation would go here
-    # This is a placeholder for the actual trotter step implementation
-    qc = QuantumCircuit(n_qubits)
-    # Add actual trotter step gates based on parameters
+def trotter_stepper(step: int, n_qubits: int, epsilon: float, mass: float, insertion_point: int) -> QuantumCircuit:
+    """Create a Trotter step circuit for a given step number.
+    
+    Parameters:
+        step: Trotter step index
+        n_qubits: Number of qubits
+        epsilon: Trotter step size
+        mass: Fermion mass parameter
+        insertion_point: Insertion point index for meson operator
+        
+    Returns:
+        Quantum circuit implementing the Trotter step
+    """
+    from .trotter import superposition_state_prep, trotter1, meson_operator
+    
+    qc = QuantumCircuit(n_qubits, 0)
+    qc.append(superposition_state_prep(n_qubits), range(n_qubits))
+    qc.append(trotter1(n_qubits, step, epsilon, mass), range(n_qubits))
+    qc.append(meson_operator(), [insertion_point, insertion_point+1, insertion_point+2])
     return qc
 
 
