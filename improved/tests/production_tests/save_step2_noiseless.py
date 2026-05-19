@@ -10,7 +10,6 @@ and saves the results to files for later plotting.
 import sys
 import os
 import json
-import csv
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
@@ -64,15 +63,9 @@ def save_step2_fermion_number():
     boot_err = bootstrap_error(counts, insertion_point, num_shots, seed=42)
     # print(f"Bootstrap error: {boot_err}")
     
-    # Save raw counts to JSON (seed-based naming for reproducibility)
+    # Save summary results to JSON
     sim_seed = 42
     bs_seed = 42
-    counts_filename = os.path.join(results_dir, f"step2_counts_seed{sim_seed}.json")
-    with open(counts_filename, 'w') as f:
-        json.dump(counts, f, indent=2)
-    # print(f"Saved counts to {counts_filename}")
-    
-    # Save summary results to JSON
     summary = {
         "simulator_seed": sim_seed,
         "bootstrap_seed": bs_seed,
@@ -90,15 +83,6 @@ def save_step2_fermion_number():
         json.dump(summary, f, indent=2)
     # print(f"Saved summary to {summary_filename}")
     
-    # Save counts as CSV for easy plotting
-    csv_filename = os.path.join(results_dir, f"step2_counts_seed{sim_seed}.csv")
-    with open(csv_filename, 'w', newline='') as f:
-        writer = csv.writer(f)
-        writer.writerow(['bitstring', 'count'])
-        for bitstring, count in counts.items():
-            writer.writerow([bitstring, count])
-    # print(f"Saved counts CSV to {csv_filename}")
-    
     # Save each shot on its own line (num_shots total lines)
     shots_filename = os.path.join(results_dir, f"step2_shots_seed{sim_seed}.txt")
     with open(shots_filename, 'w') as f:
@@ -107,7 +91,7 @@ def save_step2_fermion_number():
                 f.write(bitstring + '\n')
     # print(f"Saved {num_shots} shots to {shots_filename}")
     
-    return fn, boot_err, counts_filename, summary_filename, csv_filename, shots_filename
+    return fn, boot_err, summary_filename, shots_filename
 
 
 def save_step2_fermion_number_knitted():
@@ -142,12 +126,6 @@ def save_step2_fermion_number_knitted():
     tp_seed = 42
     bs_seed = 42
     
-    # Save raw counts to JSON
-    counts_filename = os.path.join(results_dir, f"step2_knitted_counts_sim{sim_seed}_tp{tp_seed}_bs{bs_seed}.json")
-    with open(counts_filename, 'w') as f:
-        json.dump(counts, f, indent=2)
-    # print(f"Saved knitted counts to {counts_filename}")
-    
     # Save summary results to JSON
     summary = {
         "simulator_seed": sim_seed,
@@ -170,15 +148,6 @@ def save_step2_fermion_number_knitted():
         json.dump(summary, f, indent=2)
     # print(f"Saved knitted summary to {summary_filename}")
     
-    # Save counts as CSV for easy plotting
-    csv_filename = os.path.join(results_dir, f"step2_knitted_counts_sim{sim_seed}_tp{tp_seed}_bs{bs_seed}.csv")
-    with open(csv_filename, 'w', newline='') as f:
-        writer = csv.writer(f)
-        writer.writerow(['bitstring', 'count'])
-        for bitstring, count in counts.items():
-            writer.writerow([bitstring, count])
-    # print(f"Saved knitted counts CSV to {csv_filename}")
-    
     # Save each shot on its own line (num_shots total lines)
     shots_filename = os.path.join(results_dir, f"step2_knitted_shots_sim{sim_seed}_tp{tp_seed}_bs{bs_seed}.txt")
     with open(shots_filename, 'w') as f:
@@ -187,16 +156,16 @@ def save_step2_fermion_number_knitted():
                 f.write(bitstring + '\n')
     # print(f"Saved {num_shots_knitted} knitted shots to {shots_filename}")
     
-    return fn, boot_err, counts_filename, summary_filename, csv_filename, shots_filename
+    return fn, boot_err, summary_filename, shots_filename
 
 
 if __name__ == "__main__":
     # print("Running second Trotter step fermion number analysis...")
-    fermion_num, error, counts_file, summary_file, csv_file, shots_file = save_step2_fermion_number()
+    fermion_num, error, summary_file, shots_file = save_step2_fermion_number()
     # print(f"\nSecond Trotter step fermion number: {fermion_num:.4f} +/- {error:.4f}")
     
     # print("\nRunning knitted second Trotter step fermion number analysis...")
-    knitted_fn, knitted_err, k_counts_file, k_summary_file, k_csv_file, k_shots_file = save_step2_fermion_number_knitted()
+    knitted_fn, knitted_err, k_summary_file, k_shots_file = save_step2_fermion_number_knitted()
     # print(f"\nKnitted second Trotter step fermion number: {knitted_fn:.4f} +/- {knitted_err:.4f}")
     
     # print("\nAll results saved to the 'results/' directory.")
