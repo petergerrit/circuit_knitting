@@ -31,7 +31,7 @@ mass = 1.125
 insertion_point = 4  # Insertion point index for meson operator
 num_shots = 1024**2
 starting_shots = 1024
-powers_of_two = 4
+powers_of_two = 6
 results_dir = "results"
 
 # Create results directory if it doesn't exist

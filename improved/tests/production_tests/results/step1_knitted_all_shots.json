@@ -1,7 +1,7 @@
 {
   "experiment": "step1_knitted_varying_shots",
   "starting_shots": 1024,
-  "powers_of_two": 4,
+  "powers_of_two": 6,
   "results": [
     {
       "simulator_seed": 42,
@@ -82,6 +82,38 @@
       "end_qubit": 10,
       "fermion_number": 0.5181708784596868,
       "bootstrap_error": 0.006086290513305518
+    },
+    {
+      "simulator_seed": 42,
+      "transpiler_seed": 42,
+      "bootstrap_seed": 42,
+      "trotter_step": 1,
+      "Nqbits": 12,
+      "epsilon": 0.8,
+      "mass": 1.125,
+      "insertion_point": 4,
+      "num_shots": 32768,
+      "knitted": true,
+      "start_qubit": 0,
+      "end_qubit": 10,
+      "fermion_number": 0.5183592558706925,
+      "bootstrap_error": 0.0038819046854133366
+    },
+    {
+      "simulator_seed": 42,
+      "transpiler_seed": 42,
+      "bootstrap_seed": 42,
+      "trotter_step": 1,
+      "Nqbits": 12,
+      "epsilon": 0.8,
+      "mass": 1.125,
+      "insertion_point": 4,
+      "num_shots": 65536,
+      "knitted": true,
+      "start_qubit": 0,
+      "end_qubit": 10,
+      "fermion_number": 0.5168217172487426,
+      "bootstrap_error": 0.0028539595384306266
     }
   ]
 }
