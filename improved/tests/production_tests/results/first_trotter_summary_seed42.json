@@ -1,0 +1,12 @@
+{
+  "simulator_seed": 42,
+  "bootstrap_seed": 42,
+  "trotter_step": 1,
+  "Nqbits": 12,
+  "epsilon": 0.8,
+  "mass": 1.125,
+  "insertion_point": 4,
+  "num_shots": 1048576,
+  "fermion_number": 0.5180521011352539,
+  "bootstrap_error": 0.00047231423133503565
+}
