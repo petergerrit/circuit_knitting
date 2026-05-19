@@ -2,10 +2,12 @@
 """
 Combined seed tests for first Trotter step with knitter.
 
-Implements three tests from the tests matrix:
+Implements five tests from the tests matrix:
 - 1 == 2: identical seeds should produce same fermion number and bootstrap error
-- 1 != 3: different simulation seeds should produce different fermion numbers
-- 1 != 4: different bootstrap seeds should produce different bootstrap errors but same fermion number
+- 1 != 3: different bootstrap seeds should produce different bootstrap errors but same fermion number
+- 1 != 4: different simulator seeds should produce different fermion numbers
+- 1 != 5: different transpiler seeds should produce different fermion numbers
+- 4 != 5: different simulator and transpiler seeds should produce different fermion numbers
 
 All runs use the first Trotter step circuit, noise=True, and 128 shots.
 """
@@ -50,7 +52,7 @@ def run_knitter(simulator_seed=42, transpiler_seed=42, bootstrap_seed=42, noise=
 
 def run_1st_run():
     """Run the 1st run once and return its results."""
-    print(f"\nPerforming 1st run (noisy; simulator_seed=42, transpiler_seed=42, bootstrap_seed=42, shots={num_shots_knitted})...")
+    print(f"\nPerforming 1st run (simulator_seed=42, transpiler_seed=42, bootstrap_seed=42)...")
     counts_run1 = run_knitter(simulator_seed=42, transpiler_seed=42, bootstrap_seed=42, noise=True)
     fn_run1 = fermion_number(counts_run1, insertion_point)
     boot_err_run1 = bootstrap_error(counts_run1, insertion_point, num_shots_knitted, seed=42)
@@ -62,7 +64,7 @@ def run_1st_run():
 def run_1_eq_2(fn_run1, boot_err_run1):
     """1 == 2: identical seeds should produce same fermion number and bootstrap error."""
     # 2nd run: same seeds 42, 42, 42
-    print(f"\nPerforming 2nd run (noisy; simulator_seed=42, transpiler_seed=42, bootstrap_seed=42, shots={num_shots_knitted})...")
+    print(f"\nPerforming 2nd run (simulator_seed=42, transpiler_seed=42, bootstrap_seed=42)...")
     counts_run2 = run_knitter(simulator_seed=42, transpiler_seed=42, bootstrap_seed=42, noise=True)
     fn_run2 = fermion_number(counts_run2, insertion_point)
     boot_err_run2 = bootstrap_error(counts_run2, insertion_point, num_shots_knitted, seed=42)
@@ -77,37 +79,58 @@ def run_1_eq_2(fn_run1, boot_err_run1):
 
 
 def run_1_neq_3(fn_run1, boot_err_run1):
-    """1 != 3: different simulation seeds should produce different fermion numbers."""
-    # 3rd run: seeds 123, 123, 42
-    print(f"\nPerforming 3rd run (noisy; simulator_seed=123, transpiler_seed=123, bootstrap_seed=42, shots={num_shots_knitted})...")
-    counts_run3 = run_knitter(simulator_seed=123, transpiler_seed=123, bootstrap_seed=42, noise=True)
+    """1 != 3: different bootstrap seeds should produce different bootstrap errors but same fermion number."""
+    # 3rd run: seeds 42, 42, 123
+    print(f"\nPerforming 3rd run (simulator_seed=42, transpiler_seed=42, bootstrap_seed=123)...")
+    counts_run3 = run_knitter(simulator_seed=42, transpiler_seed=42, bootstrap_seed=123, noise=True)
     fn_run3 = fermion_number(counts_run3, insertion_point)
-    boot_err_run3 = bootstrap_error(counts_run3, insertion_point, num_shots_knitted, seed=42)
+    boot_err_run3 = bootstrap_error(counts_run3, insertion_point, num_shots_knitted, seed=123)
     print(f"3rd run fermion number: {fn_run3}")
     print(f"3rd run bootstrap error: {boot_err_run3}")
     
-    passed = fn_run1 != fn_run3
-    return passed, "1 != 3", fn_run1, boot_err_run1, fn_run3, boot_err_run3
+    fermion_match = fn_run1 == fn_run3
+    bootstrap_differs = boot_err_run1 != boot_err_run3
+    passed = fermion_match and bootstrap_differs
+    return passed, "1 != 3", fermion_match, bootstrap_differs, fn_run1, boot_err_run1, fn_run3, boot_err_run3
 
 
 def run_1_neq_4(fn_run1, boot_err_run1):
-    """1 != 4: different bootstrap seeds should produce different bootstrap errors but same fermion number."""
-    # 4th run: seeds 42, 42, 123
-    print(f"\nPerforming 4th run (noisy; simulator_seed=42, transpiler_seed=42, bootstrap_seed=123, shots={num_shots_knitted})...")
-    counts_run4 = run_knitter(simulator_seed=42, transpiler_seed=42, bootstrap_seed=123, noise=True)
+    """1 != 4: different simulator seeds should produce different fermion numbers."""
+    # 4th run: seeds 123, 42, 42
+    print(f"\nPerforming 4th run (simulator_seed=123, transpiler_seed=42, bootstrap_seed=42)...")
+    counts_run4 = run_knitter(simulator_seed=123, transpiler_seed=42, bootstrap_seed=42, noise=True)
     fn_run4 = fermion_number(counts_run4, insertion_point)
-    boot_err_run4 = bootstrap_error(counts_run4, insertion_point, num_shots_knitted, seed=123)
+    boot_err_run4 = bootstrap_error(counts_run4, insertion_point, num_shots_knitted, seed=42)
     print(f"4th run fermion number: {fn_run4}")
     print(f"4th run bootstrap error: {boot_err_run4}")
     
-    fermion_match = fn_run1 == fn_run4
-    bootstrap_differs = boot_err_run1 != boot_err_run4
-    passed = fermion_match and bootstrap_differs
-    return passed, "1 != 4", fermion_match, bootstrap_differs, fn_run1, boot_err_run1, fn_run4, boot_err_run4
+    passed = fn_run1 != fn_run4
+    return passed, "1 != 4", fn_run1, boot_err_run1, fn_run4, boot_err_run4
+
+
+def run_1_neq_5(fn_run1, boot_err_run1):
+    """1 != 5: different transpiler seeds should produce different fermion numbers."""
+    # 5th run: seeds 42, 123, 42
+    print(f"\nPerforming 5th run (noisy; simulator_seed=42, transpiler_seed=123, bootstrap_seed=42; shots={num_shots_knitted})...")
+    counts_run5 = run_knitter(simulator_seed=42, transpiler_seed=123, bootstrap_seed=42, noise=True)
+    fn_run5 = fermion_number(counts_run5, insertion_point)
+    boot_err_run5 = bootstrap_error(counts_run5, insertion_point, num_shots_knitted, seed=42)
+    print(f"5th run fermion number: {fn_run5}")
+    print(f"5th run bootstrap error: {boot_err_run5}")
+    
+    passed = fn_run1 != fn_run5
+    return passed, "1 != 5", fn_run1, boot_err_run1, fn_run5, boot_err_run5
+
+
+def run_4_neq_5(fn_run4, fn_run5):
+    """4 != 5: different simulator and transpiler seeds should produce different fermion numbers."""
+    print(f"\nComparing runs 4 and 5 fermion numbers...")
+    passed = fn_run4 != fn_run5
+    return passed, "4 != 5", fn_run4, fn_run5
 
 
 if __name__ == "__main__":
-    print(f"Running all seed tests for first Trotter step (shots={num_shots_knitted})")
+    print(f"Running all seed tests for first Trotter step (noisy, shots={num_shots_knitted})")
     print("=" * 70)
     
     results = []
@@ -126,22 +149,34 @@ if __name__ == "__main__":
             details.append(f"bootstrap errors differ: {be1} vs {be2}")
         results.append((name, False, "; ".join(details)))
     
-    passed, name, fn1, be1, fn3, be3 = run_1_neq_3(fn_run1, boot_err_run1)
+    passed, name, fermion_match, bootstrap_differs, fn1, be1, fn3, be3 = run_1_neq_3(fn_run1, boot_err_run1)
     if passed:
-        results.append((name, True, f"Fermion numbers differ: {fn1} vs {fn3}"))
-    else:
-        results.append((name, False, f"Fermion numbers are same: {fn1}"))
-    
-    passed, name, fermion_match, bootstrap_differs, fn1, be1, fn4, be4 = run_1_neq_4(fn_run1, boot_err_run1)
-    if passed:
-        results.append((name, True, f"Fermion numbers match and bootstrap errors differ: {fn1} == {fn4}, {be1} != {be4}"))
+        results.append((name, True, f"Fermion numbers match and bootstrap errors differ: {fn1} == {fn3}, {be1} != {be3}"))
     else:
         details = []
         if not fermion_match:
-            details.append(f"fermion numbers differ: {fn1} vs {fn4}")
+            details.append(f"fermion numbers differ: {fn1} vs {fn3}")
         if not bootstrap_differs:
             details.append(f"bootstrap errors are same: {be1}")
         results.append((name, False, "; ".join(details)))
+    
+    passed, name, fn1, be1, fn4, be4 = run_1_neq_4(fn_run1, boot_err_run1)
+    if passed:
+        results.append((name, True, f"Fermion numbers differ: {fn1} vs {fn4}"))
+    else:
+        results.append((name, False, f"Fermion numbers are same: {fn1}"))
+    
+    passed, name, fn1, be1, fn5, be5 = run_1_neq_5(fn_run1, boot_err_run1)
+    if passed:
+        results.append((name, True, f"Fermion numbers differ: {fn1} vs {fn5}"))
+    else:
+        results.append((name, False, f"Fermion numbers are same: {fn1}"))
+    
+    passed, name, fn4, fn5 = run_4_neq_5(fn4, fn5)
+    if passed:
+        results.append((name, True, f"Fermion numbers differ: {fn4} vs {fn5}"))
+    else:
+        results.append((name, False, f"Fermion numbers are same: {fn4}"))
     
     print("\n" + "=" * 70)
     print("TEST SUMMARY")
