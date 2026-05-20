@@ -14,57 +14,6 @@ from qiskit_ibm_runtime import SamplerV2
 from collections import defaultdict
 
 
-def run_circuit_experiment(
-    circuit: QuantumCircuit,
-    config: 'ExperimentConfig',
-    simulator_seed: Optional[int] = None,
-    transpiler_seed: Optional[int] = None
-) -> Dict[str, int]:
-    """
-    Run a single circuit experiment and return measurement counts.
-    
-    Args:
-        circuit: Quantum circuit to execute
-        config: Experiment configuration
-        simulator_seed: Random seed for simulator
-        transpiler_seed: Random seed for transpiler
-        
-    Returns:
-        Dictionary of measurement counts
-    """
-    try:
-        from config import ExperimentConfig
-    except ImportError:
-        from .config import ExperimentConfig
-    
-    # Set up backend based on noise configuration
-    backend = FakeWashingtonV2() if config.noise else AerSimulator()
-    
-    # Set up transpiler
-    pass_manager = generate_preset_pass_manager(
-        optimization_level=config.optimization_level,
-        backend=backend,
-        seed_transpiler=transpiler_seed or np.random.randint(1024**2)
-    )
-    
-    # Transpile circuit
-    transpiled_circuit = pass_manager.run(circuit)
-    
-    # Set up sampler with options
-    options = {
-        "simulator": {
-            "seed_simulator": simulator_seed or np.random.randint(1024**2)
-        }
-    }
-    sampler = SamplerV2(backend, options=options)
-    
-    # Run job and get results
-    job = sampler.run([transpiled_circuit], shots=config.num_shots)
-    result_dict = job.result()[0].data.c.get_counts()
-    
-    return result_dict
-
-
 def my_measure(
     circuit_data: List,
     conq: int,
@@ -136,7 +85,7 @@ def comb_measure(result_in: Dict[str, int], conq: int, tarq: int, num_cx: int) -
     """
     result_dict = defaultdict(int)
     for item in result_in:
-        # FIX: Use len(item)-num_cx instead of -num_cx to handle num_cx=0 case
+        # Note: Use len(item)-num_cx instead of -num_cx to handle num_cx=0 case
         # When num_cx=0, item[:-0] returns empty string, but item[:len(item)] returns full string
         end_meas = item[:len(item)-num_cx]
         int_meas = item[len(item)-num_cx:]

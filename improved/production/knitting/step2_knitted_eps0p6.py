@@ -11,7 +11,7 @@ import os
 import json
 import random
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
 from circuits.basic_circuits import trotter_stepper
 from circuit_utils.statistics import fermion_number, bootstrap_error
@@ -33,11 +33,12 @@ os.makedirs(results_dir, exist_ok=True)
 
 # Create second Trotter step circuit (step 2)
 circuit = trotter_stepper(2, Nqbits, epsilon, mass, insertion_point)
+circuit.measure_all()
 
 
 def run_single_knitted(simulator_seed, transpiler_seed, bootstrap_seed):
     """Run circuit knitter once and return result summary dictionary."""
-    config = ExperimentConfig(noise=False)
+    config = ExperimentConfig(noise=True)
     
     knitted_results = circuit_knitter(
         circuit=circuit,

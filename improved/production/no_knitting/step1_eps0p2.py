@@ -10,13 +10,18 @@ import sys
 import os
 import json
 import random
+import numpy as np
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+
+from qiskit import transpile
+from qiskit.transpiler import generate_preset_pass_manager
+from qiskit_aer import AerSimulator
+from qiskit_ibm_runtime.fake_provider import FakeWashingtonV2
+from qiskit_ibm_runtime import SamplerV2
 
 from circuits.basic_circuits import trotter_stepper
 from circuit_utils.statistics import fermion_number, bootstrap_error
-from knitter.execution import run_circuit_experiment
-from config import ExperimentConfig
 
 
 # Configuration parameters
@@ -27,24 +32,45 @@ insertion_point = 4
 num_shots = 1024 * 16
 num_runs = 10
 results_dir = "results"
+optimization_level = 3
 
 # Create results directory if it doesn't exist
 os.makedirs(results_dir, exist_ok=True)
 
 # Create first Trotter step circuit (step 1)
 circuit = trotter_stepper(1, Nqbits, epsilon, mass, insertion_point)
+circuit.measure_all()
 
 
 def run_single(simulator_seed, transpiler_seed, bootstrap_seed):
     """Run circuit once and return result summary dictionary."""
-    config = ExperimentConfig(noise=False)
+    noise = True
     
-    counts = run_circuit_experiment(
-        circuit=circuit,
-        config=config,
-        simulator_seed=simulator_seed,
-        transpiler_seed=transpiler_seed
+    # Set up backend based on noise configuration
+    backend = FakeWashingtonV2() if noise else AerSimulator()
+    
+    # Set up transpiler
+    pass_manager = generate_preset_pass_manager(
+        optimization_level=optimization_level,
+        backend=backend,
+        seed_transpiler=transpiler_seed or np.random.randint(1024**2)
     )
+    
+    # Transpile circuit
+    transpiled_circuit = pass_manager.run(circuit)
+    
+    # Set up sampler with options
+    options = {
+        "simulator": {
+            "seed_simulator": simulator_seed or np.random.randint(1024**2)
+        }
+    }
+    sampler = SamplerV2(backend, options=options)
+    
+    # Run job and get results
+    job = sampler.run([transpiled_circuit], shots=num_shots)
+    result = job.result()[0]
+    counts = result.data.meas.get_counts()
     
     fn = fermion_number(counts, insertion_point)
     boot_err = bootstrap_error(counts, insertion_point, num_shots, seed=bootstrap_seed)
