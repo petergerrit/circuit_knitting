@@ -47,7 +47,7 @@ def run_knitter(noise, simulator_seed=42, transpiler_seed=42):
 
 def run_1st_run():
     """Run the 1st run (noiseless) once and return its results."""
-    print(f"\nPerforming 1st run (noiseless; simulator_seed=42, transpiler_seed=42, shots={num_shots_knitted})...")
+    print(f"\nPerforming 1st run (noiseless; simulator_seed=42, transpiler_seed=42)...")
     counts_run1 = run_knitter(noise=False, simulator_seed=42, transpiler_seed=42)
     fn_run1 = fermion_number(counts_run1, insertion_point)
     print(f"1st run fermion number: {fn_run1}")
@@ -56,7 +56,7 @@ def run_1st_run():
 
 def run_2nd_run():
     """Run the 2nd run (noisy) and return its results."""
-    print(f"\nPerforming 2nd run (noisy; simulator_seed=42, transpiler_seed=42, shots={num_shots_knitted})...")
+    print(f"\nPerforming 2nd run (noisy; simulator_seed=42, transpiler_seed=42)...")
     counts_run2 = run_knitter(noise=True, simulator_seed=42, transpiler_seed=42)
     fn_run2 = fermion_number(counts_run2, insertion_point)
     print(f"2nd run fermion number: {fn_run2}")
