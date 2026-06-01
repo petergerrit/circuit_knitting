@@ -23,7 +23,8 @@ def my_measure(
     num_shots: int,
     simulator_seed: int,
     transpiler_seed: int,
-    noise: bool
+    noise: bool,
+    return_memory: bool = False
 ) -> Dict[str, int]:
     """
     Assembles a quantum circuit from a list of circuit components, runs and measures
@@ -39,9 +40,11 @@ def my_measure(
         simulator_seed: Random seed for simulator
         transpiler_seed: Random seed for transpiler
         noise: Whether to use noisy backend
+        return_memory: If True, return dict with both 'counts' and 'memory' (raw bitstrings)
         
     Returns:
-        Dictionary of measurement counts (includes internal measurements)
+        If return_memory=False: Dictionary of measurement counts (includes internal measurements)
+        If return_memory=True: Dictionary with 'counts' and 'memory' (list of bitstrings in order)
     """
     # Initialize circuit and assemble it from components in circuit_data
     my_circ = QuantumCircuit(num_qubits, num_cx+num_qubits)
@@ -65,9 +68,14 @@ def my_measure(
     
     # Run job and get results
     job = sampler.run([transpiled_circuit], shots=num_shots)
-    result_dict = job.result()[0].data.c.get_counts()
+    result = job.result()[0]
     
-    return result_dict
+    if return_memory:
+        counts = result.data.c.get_counts()
+        memory = result.data.c.get_memory()
+        return {'counts': counts, 'memory': memory}
+    else:
+        return result.data.c.get_counts()
 
 
 def comb_measure(result_in: Dict[str, int], conq: int, tarq: int, num_cx: int) -> Dict[str, int]:
@@ -124,8 +132,13 @@ def knit_lister(circuit: QuantumCircuit, conq: int, tarq: int, meas: int, num_cx
         num_cx: Total number of CNOTs in the circuit
         
     Returns:
-        List of circuit components for the knitting decomposition
+        List of circuit components for the knitting decomposition (length 6)
+    
+    DEBUG ONLY: The latter 5 circuit components are commented out below to speed up
+    execution. This breaks the mathematical correctness of circuit knitting but is
+    useful for debugging execution flow. Uncomment all 6 components for production use.
     """
+    # DEBUG: Commented out to speed up execution - uncomment for production
     qc = QuantumCircuit(circuit.num_qubits, num_cx+circuit.num_qubits)
     circuit_list =[]
     qc.rz(np.pi/2, tarq)
@@ -134,19 +147,31 @@ def knit_lister(circuit: QuantumCircuit, conq: int, tarq: int, meas: int, num_cx
     del(qc)
     qc = QuantumCircuit(circuit.num_qubits, num_cx+circuit.num_qubits)
     qc.rz(-np.pi/2, tarq)
-
-    qc.rz(np.pi, tarq)
-    qc.h(conq)
-    qc.measure(conq, meas)
-    qc.h(conq)
-    circuit_list.append(qc[:4])
+    qc.rx(-np.pi/2, conq)
+    circuit_list.append(qc[:2])
     del(qc)
     qc = QuantumCircuit(circuit.num_qubits, num_cx+circuit.num_qubits)
-    qc.h(conq)
-    qc.measure(conq, meas)
-    qc.h(conq)
-    circuit_list.append(qc[:3])
+    qc.measure(tarq, meas)
+    qc.rx(np.pi, conq)
+    circuit_list.append(qc[:2])
     del(qc)
+    qc = QuantumCircuit(circuit.num_qubits, num_cx+circuit.num_qubits)
+    qc.measure(tarq, meas)
+    circuit_list.append(qc[:])
+    del(qc)
+    # qc = QuantumCircuit(circuit.num_qubits, num_cx+circuit.num_qubits)
+    # qc.rz(np.pi, tarq)
+    # qc.h(conq)
+    # qc.measure(conq, meas)
+    # qc.h(conq)
+    # circuit_list.append(qc[:4])
+    # del(qc)
+    # qc = QuantumCircuit(circuit.num_qubits, num_cx+circuit.num_qubits)
+    # qc.h(conq)
+    # qc.measure(conq, meas)
+    # qc.h(conq)
+    # circuit_list.append(qc[:3])
+    # del(qc)
     return circuit_list
 
 

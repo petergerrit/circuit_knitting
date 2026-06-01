@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
 Script to investigate randomness in circuit knitter.
-Runs with simulator_seed=42, transpiler_seed=42 repeatedly until killed.
-Appends fermion numbers to a text file after each run.
+Runs with simulator_seed=42, transpiler_seed=42 once.
+Writes fermion number to the header of the debug output file.
 
 Usage:
     python investigate_randomness.py --shots 16 --trotter-step 2
@@ -27,8 +27,8 @@ mass = 1.125
 insertion_point = 4
 
 
-def run_and_log(iteration, circuit, num_shots, config, output_file):
-    """Run knitter and log fermion number."""
+def run_and_log(circuit, num_shots, trotter_step, config, debug_file):
+    """Run knitter and log fermion number to debug file header."""
     knitted_results = circuit_knitter(
         circuit=circuit,
         start_qubit=0,
@@ -36,17 +36,20 @@ def run_and_log(iteration, circuit, num_shots, config, output_file):
         num_shots=num_shots,
         config=config,
         simulator_seed=42,
-        transpiler_seed=42
+        transpiler_seed=42,
+        debug_file=debug_file
     )
 
     counts = knitted_results['results']
     fn = fermion_number(counts, insertion_point)
 
     timestamp = datetime.now().isoformat()
-    log_line = f"{timestamp} | iteration={iteration} | fermion_number={fn}\n"
+    header_line = f"# {timestamp} | fermion_number={fn}\n"
 
-    with open(output_file, 'a') as f:
-        f.write(log_line)
+    with open(debug_file, 'r+') as f:
+        content = f.read()
+        f.seek(0)
+        f.write(header_line + content)
 
     return fn
 
@@ -60,23 +63,13 @@ def main():
     # Dynamic configuration from arguments
     num_shots_knitted = args.shots
     trotter_step = args.trotter_step
-    OUTPUT_FILE = f"fermi_number_investigation_shots{num_shots_knitted}_step{trotter_step}.txt"
+    debug_file = f"debug_step{trotter_step}_shots{num_shots_knitted}_baseline.txt"
 
     # Create Trotter step circuit
     circuit = trotter_stepper(trotter_step, Nqbits, epsilon, mass, insertion_point)
     config = ExperimentConfig(noise=True)
 
-    iteration = 0
-    unique_results = set()
-
-    try:
-        while True:
-            iteration += 1
-            fn = run_and_log(iteration, circuit, num_shots_knitted, config, OUTPUT_FILE)
-            unique_results.add(fn)
-
-    except KeyboardInterrupt:
-        pass
+    run_and_log(circuit, num_shots_knitted, trotter_step, config, debug_file)
 
 
 if __name__ == "__main__":

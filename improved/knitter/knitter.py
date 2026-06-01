@@ -77,7 +77,8 @@ def circuit_knitter(
     config: ExperimentConfig,
     simulator_seed: Optional[int] = None,
     transpiler_seed: Optional[int] = None,
-    decompose: bool = True
+    decompose: bool = True,
+    debug_file: Optional[str] = None
 ) -> Dict[str, Any]:
     """
     Perform circuit knitting on a given circuit using the full knitting algorithm.
@@ -91,6 +92,7 @@ def circuit_knitter(
         simulator_seed: Random seed for simulator
         transpiler_seed: Random seed for transpiler
         decompose: Whether to fully decompose the circuit (default True)
+        debug_file: If provided, write intermediate results of all 6**num_cnot circuits to this file
         
     Returns:
         Dictionary containing knitting results and metadata
@@ -133,11 +135,35 @@ def circuit_knitter(
             None
     
     # A list of length 6**n containing the instructions to assemble the terms of the decomposition
-    circuits = [*product(*nest_list)]
-    circuits = [flattener(item) for item in circuits]
+    circuits_raw = [*product(*nest_list)]
+    circuits = [flattener(item) for item in circuits_raw]
     
     # Execute all knitting terms and combine results
     cum_tot = defaultdict(int)
+    
+    # Open debug file if specified
+    debug_fh = None
+    if debug_file is not None:
+        debug_fh = open(debug_file, 'w')
+        debug_fh.write(f"# Circuit Knitter Debug Output\n")
+        debug_fh.write(f"# Circuit: {circuit.name if circuit.name else 'unnamed'}\n")
+        debug_fh.write(f"# Control qubit: {conq}, Target qubit: {tarq}\n")
+        debug_fh.write(f"# Number of CNOTs: {num_cx}\n")
+        debug_fh.write(f"# Total circuits to process: {6**num_cx}\n")
+        debug_fh.write(f"# Shots per circuit: {num_shots}\n")
+        debug_fh.write(f"# Noise: {config.noise}\n")
+        debug_fh.write(f"# Timestamp: {datetime.now().isoformat()}\n")
+        debug_fh.write("\n")
+    
+    # Write debug information for nest_list and circuits
+    if debug_fh is not None:
+        debug_fh.write(f"# nest_list length: {len(nest_list)}\n")
+        debug_fh.write(f"# nest_list: {nest_list}\n\n")
+        debug_fh.write(f"# Circuits list length (after product): {len(circuits_raw)}\n")
+        debug_fh.write(f"# Circuits (first 3 after product): {list(circuits_raw)[:3]}\n\n")
+        debug_fh.write(f"# Circuits list length (after flattening): {len(circuits)}\n")
+        debug_fh.write(f"# Circuits (first 3 after flattening): {circuits[:3]}\n\n")
+    
     for i, item in enumerate(circuits):
         # Use provided seeds for reproducibility, or generate random seeds for variability
         if simulator_seed is not None:
@@ -153,8 +179,21 @@ def circuit_knitter(
         temp_res_internal_meas = my_measure(item, conq, tarq, circuit.num_qubits, num_cx, num_shots, 
                                             current_simulator_seed, current_transpiler_seed, config.noise)
         temp_res = comb_measure(temp_res_internal_meas, conq, tarq, num_cx)
+        
+        # Write debug information for this circuit
+        if debug_fh is not None:
+            debug_fh.write(f"Circuit {i} / {len(circuits)} (prefactor: {prefac_list[i]})\n")
+            debug_fh.write(f"  Simulator seed: {current_simulator_seed}, Transpiler seed: {current_transpiler_seed}\n")
+            debug_fh.write(f"  Raw measurement results (internal): {dict(temp_res_internal_meas)}\n")
+            debug_fh.write(f"  Combined measurement results: {dict(temp_res)}\n")
+            debug_fh.write(f"\n")
+        
         for sub_item in temp_res:
             cum_tot[sub_item] += temp_res[sub_item] * prefac_list[i]
+    
+    # Close debug file if it was opened
+    if debug_fh is not None:
+        debug_fh.close()
     
     res_dict = {key: cum_tot[key] for key in sorted(cum_tot)}
     
