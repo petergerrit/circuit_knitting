@@ -58,12 +58,13 @@ def main():
     parser = argparse.ArgumentParser(description='Investigate randomness in circuit knitter.')
     parser.add_argument('--shots', type=int, default=16, help='Number of shots (default: 16)')
     parser.add_argument('--trotter-step', type=int, default=2, help='Trotter step (default: 2)')
+    parser.add_argument('--test-name', type=str, default='baseline', help='Test identifier for output file (default: baseline)')
     args = parser.parse_args()
 
     # Dynamic configuration from arguments
     num_shots_knitted = args.shots
     trotter_step = args.trotter_step
-    debug_file = f"debug_step{trotter_step}_shots{num_shots_knitted}_baseline.txt"
+    debug_file = f"debug_step{trotter_step}_shots{num_shots_knitted}_{args.test_name}.txt"
 
     # Create Trotter step circuit
     circuit = trotter_stepper(trotter_step, Nqbits, epsilon, mass, insertion_point)
