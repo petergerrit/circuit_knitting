@@ -55,16 +55,17 @@ def my_measure(
     # Select noisy or ideal backend
     if noise:
         backend = FakeWashingtonV2()
+        backend.set_options(seed_simulator=simulator_seed)
     else:
         backend = AerSimulator()
+        backend.set_options(seed_simulator=simulator_seed)
     
     # Transpiled circuit
     pass_manager = generate_preset_pass_manager(optimization_level=1, backend=backend, seed_transpiler=transpiler_seed)
     transpiled_circuit = pass_manager.run(my_circ)
     
     # Initialize sampler
-    options = {"simulator": {"seed_simulator": simulator_seed}}
-    sampler = SamplerV2(backend, options=options)
+    sampler = SamplerV2(backend)
     
     # Run job and get results
     job = sampler.run([transpiled_circuit], shots=num_shots)
