@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
-results_dir = "tests/production_tests/results"
+results_dir = "results"
 input_file = os.path.join(results_dir, "step1_knitted_all_shots.json")
 summary_file = os.path.join(results_dir, "step1_summary_seed42.json")
 output_file = os.path.join(results_dir, "step1_convergence_noiseless.pdf")
