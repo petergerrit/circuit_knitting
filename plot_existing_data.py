@@ -1,87 +1,106 @@
 #!/usr/bin/env python
-"""Plot existing data from the 4 available data files."""
+"""Plot all existing data from data/*.txt files."""
 
+import os
+import re
 import numpy as np
 import matplotlib.pyplot as plt
 
 # Shot values: 1024 * 2^i for i in 0..10
-shots_list_full = [1024 * 2**i for i in range(11)]
+shots_list = [1024 * 2**i for i in range(11)]
 
 def load_data(filename):
-    """Load data from a text file, return empty list if file doesn't exist."""
-    try:
-        with open(filename, 'r') as f:
-            return [float(line.strip()) for line in f]
-    except FileNotFoundError:
-        return []
+    """Load data from a text file. Handles both 'value' and 'step->value' formats."""
+    with open(filename, 'r') as f:
+        lines = f.readlines()
+    
+    values = []
+    for line in lines:
+        line = line.strip()
+        if not line:
+            continue
+        # Check if line has '->' delimiter
+        if '->' in line:
+            # Format: "step->value"
+            parts = line.split('->')
+            values.append(float(parts[-1].strip()))
+        else:
+            # Format: just the value
+            values.append(float(line))
+    
+    return values
 
-print("Loading existing data...")
+# Find all data files
+data_dir = 'data'
+pattern = r'^(ferm_num|bs_error)_step(\d+)_epsilon08_no_noise_(knitted|no_knit)\..*$'
 
-# Load all existing data files (no-knit)
-ferm_num_s1_nk = load_data('data/ferm_num_step1_epsilon08_no_noise_no_knit.txt')
-bs_error_s1_nk = load_data('data/bs_error_step1_epsilon08_no_noise_no_knit.txt')
-ferm_num_s2_nk = load_data('data/ferm_num_step2_epsilon08_no_noise_no_knit.txt')
-bs_error_s2_nk = load_data('data/bs_error_step2_epsilon08_no_noise_no_knit.txt')
+print("Searching for data files...")
 
-# Load knitted data if available
-ferm_num_s1_k = load_data('data/ferm_num_step1_epsilon08_no_noise_knitted.txt')
-bs_error_s1_k = load_data('data/bs_error_step1_epsilon08_no_noise_knitted.txt')
-ferm_num_s2_k = load_data('data/ferm_num_step2_epsilon08_no_noise_knitted.txt')
-bs_error_s2_k = load_data('data/bs_error_step2_epsilon08_no_noise_knitted.txt')
+# Collect datasets
+# Structure: {(step, variant): {'ferm_num': [...], 'bs_error': [...]}}
+datasets = {}
 
-# Determine which datasets are available
-no_knit_available = all([ferm_num_s1_nk, bs_error_s1_nk, ferm_num_s2_nk, bs_error_s2_nk])
-knitted_available = all([ferm_num_s1_k, bs_error_s1_k, ferm_num_s2_k, bs_error_s2_k])
+for fname in sorted(os.listdir(data_dir)):
+    match = re.match(pattern, fname)
+    if not match:
+        continue
+    
+    var_type = match.group(1)  # ferm_num or bs_error
+    step = int(match.group(2))
+    variant = match.group(3)   # knitted or no_knit
+    
+    key = (step, variant)
+    if key not in datasets:
+        datasets[key] = {}
+    
+    filepath = os.path.join(data_dir, fname)
+    data = load_data(filepath)
+    datasets[key][var_type] = data
+    print(f"  Loaded: {fname} ({len(data)} points)")
 
-# Determine the number of complete data points (minimum across all available arrays)
-all_data = [ferm_num_s1_nk, bs_error_s1_nk, ferm_num_s2_nk, bs_error_s2_nk,
-           ferm_num_s1_k, bs_error_s1_k, ferm_num_s2_k, bs_error_s2_k]
-loaded_data = [d for d in all_data if d]  # Only include non-empty datasets
-num_points = min(len(d) for d in loaded_data) if loaded_data else 0
-shots_list = shots_list_full[:num_points]
+print(f"\nFound {len(datasets)} dataset pairs")
 
-print(f"Data loaded: {num_points} points per dataset (using first {num_points} of {len(shots_list_full)} possible shots)")
-if no_knit_available:
-    print("  No-knit data: available")
-else:
-    print("  No-knit data: NOT available")
-if knitted_available:
-    print("  Knitted data: available")
-else:
-    print("  Knitted data: NOT available")
+# Color and marker configuration
+colors = {
+    1: 'blue',
+    2: 'orange'
+}
+markers = {
+    'no_knit': 'o',
+    'knitted': 's'
+}
 
-# Create plot
 plt.figure(figsize=(12, 8))
 
-# Step 1, no knit (blue, circle)
-if no_knit_available:
-    plt.scatter(shots_list, ferm_num_s1_nk[:num_points], label='Step 1, no knit', color='blue', marker='o', s=80)
-    plt.errorbar(shots_list, ferm_num_s1_nk[:num_points], bs_error_s1_nk[:num_points], alpha=0.3, ls='none', color='blue', capsize=3)
-
-# Step 1, knitted (blue, square)
-if knitted_available:
-    plt.scatter(shots_list, ferm_num_s1_k[:num_points], label='Step 1, knitted', color='blue', marker='s', s=80)
-    plt.errorbar(shots_list, ferm_num_s1_k[:num_points], bs_error_s1_k[:num_points], alpha=0.3, ls='none', color='blue', capsize=3)
-
-# Step 2, no knit (orange, circle)
-if no_knit_available:
-    plt.scatter(shots_list, ferm_num_s2_nk[:num_points], label='Step 2, no knit', color='orange', marker='o', s=80)
-    plt.errorbar(shots_list, ferm_num_s2_nk[:num_points], bs_error_s2_nk[:num_points], alpha=0.3, ls='none', color='orange', capsize=3)
-
-# Step 2, knitted (orange, square)
-if knitted_available:
-    plt.scatter(shots_list, ferm_num_s2_k[:num_points], label='Step 2, knitted', color='orange', marker='s', s=80)
-    plt.errorbar(shots_list, ferm_num_s2_k[:num_points], bs_error_s2_k[:num_points], alpha=0.3, ls='none', color='orange', capsize=3)
+for (step, variant), data_dict in sorted(datasets.items()):
+    if 'ferm_num' not in data_dict or 'bs_error' not in data_dict:
+        continue
+    
+    ferm_num = data_dict['ferm_num']
+    bs_error = data_dict['bs_error']
+    
+    # Use only the shots that match the data length
+    n_points = len(ferm_num)
+    shots = shots_list[:n_points]
+    
+    color = colors.get(step, 'gray')
+    marker = markers.get(variant, 'x')
+    label = f'Step {step}, {variant.replace("_", " ")}'
+    
+    plt.scatter(shots, ferm_num, label=label, 
+                color=color, marker=marker, s=80)
+    plt.errorbar(shots, ferm_num, bs_error, 
+                 alpha=0.3, ls='none', color=color, capsize=3)
 
 plt.xscale('log')
 plt.xlabel('Shots (log scale)')
 plt.ylabel('Mean Fermion Number')
-plt.title('Noiseless Trotter Steps: Fermion Number vs Shots\n(Epsilon = 0.8)')
+plt.title('Noiseless Trotter Steps: Fermion Number vs Shots with Error Bars\n(Epsilon = 0.8)')
 plt.legend(fontsize=12)
 plt.grid(True, which='both', linestyle='--', alpha=0.5)
 plt.tight_layout()
 
 # Save and show
 plt.savefig('figures/existing_data_convergence.pdf', dpi=300, bbox_inches='tight')
-print("Plot saved to figures/existing_data_convergence.pdf")
+print("\nPlot saved to figures/existing_data_convergence.pdf")
 plt.show()
