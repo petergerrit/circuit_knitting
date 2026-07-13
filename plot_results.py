@@ -63,7 +63,6 @@ plt.grid(True, which='both', linestyle='--', alpha=0.5)
 plt.tight_layout()
 
 # Save and show
-plt.savefig('figures/noiseless_convergence.png', dpi=150)
 plt.savefig('figures/noiseless_convergence.pdf')
-print("Plot saved to figures/noiseless_convergence.png and .pdf")
+print("Plot saved to figures/noiseless_convergence.pdf")
 plt.show()
