@@ -21,4 +21,6 @@ with open('data/ferm_num_step1_epsilon08_no_noise_knitted.txt', 'w') as f_fn, \
         fn = fermion_number(res, mid)
         be = bootstrap_error(res, mid, num_shots)
         f_fn.write(f'{fn}\n')
+        f_fn.flush()
         f_be.write(f'{be}\n')
+        f_be.flush()
