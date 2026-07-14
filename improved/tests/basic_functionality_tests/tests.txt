@@ -1,0 +1,54 @@
+Circuit Knitting Test Suite
+===========================
+
+This directory contains the test suite for the circuit knitting implementation.
+
+TEST FILES OVERVIEW:
+-------------------
+
+1. test_simulator_randomness.py
+   - Tests basic simulator randomness with a simple 3-qubit circuit
+   - Verifies reproducibility (same seeds -> same results)
+   - Verifies randomness (different seeds -> different results)
+   - Uses no noise, 1024 shots
+
+2. test_knitter_randomness.py
+   - Tests circuit knitter randomness with the original 3-qubit test circuit
+   - Verifies knitter reproducibility and randomness
+   - Uses no noise, 1024 shots
+
+3. test_knitter_symmetry.py
+   - Tests circuit knitter symmetry properties
+   - Verifies that knitting is symmetric in control/target qubits
+   - Uses no noise, 16 shots for exact comparison
+   - Tests all qubit pairs (0<->1, 1<->2, 0<->2)
+
+4. test_simulator_noise.py
+   - Tests noisy vs noiseless execution with a simple 2-qubit circuit
+   - Uses Hadamard gates + CNOT + measurements
+   - 4 evaluations:
+     * Evaluation 1: with noise, seed=42
+     * Evaluation 2: with noise, seed=123  
+     * Evaluation 3: with noise, seed=42
+     * Evaluation 4: noiseless, seed=42
+   - Verifies:
+     * Reproducibility (same seeds produce identical results)
+     * Randomness (different seeds produce different results)
+     * Noise effects (noisy vs noiseless results with same seed differ)
+
+5. test_knitter_noise.py
+   - Tests circuit knitter with the same structure as test_simulator_noise.py
+   - Uses the same 2-qubit circuit (Hadamard + CNOT + measure)
+   - All evaluations go through the circuit knitter
+   - Uses 8 shots for all evaluations (noise increases circuit evaluation time)
+
+RUNNING TESTS:
+-------------
+
+To run individual tests:
+  python tests/test_filename.py
+
+To run all tests:
+  python tests/run_all_tests.py
+
+Note: Noisy tests may take longer
