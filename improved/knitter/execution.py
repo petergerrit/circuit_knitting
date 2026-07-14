@@ -135,11 +135,7 @@ def knit_lister(circuit: QuantumCircuit, conq: int, tarq: int, meas: int, num_cx
     Returns:
         List of circuit components for the knitting decomposition (length 6)
     
-    DEBUG ONLY: The latter 5 circuit components are commented out below to speed up
-    execution. This breaks the mathematical correctness of circuit knitting but is
-    useful for debugging execution flow. Uncomment all 6 components for production use.
     """
-    # DEBUG: Commented out to speed up execution - uncomment for production
     qc = QuantumCircuit(circuit.num_qubits, num_cx+circuit.num_qubits)
     circuit_list =[]
     qc.rz(np.pi/2, tarq)
@@ -167,12 +163,12 @@ def knit_lister(circuit: QuantumCircuit, conq: int, tarq: int, meas: int, num_cx
     qc.h(conq)
     circuit_list.append(qc[:4])
     del(qc)
-    # qc = QuantumCircuit(circuit.num_qubits, num_cx+circuit.num_qubits)
-    # qc.h(conq)
-    # qc.measure(conq, meas)
-    # qc.h(conq)
-    # circuit_list.append(qc[:3])
-    # del(qc)
+    qc = QuantumCircuit(circuit.num_qubits, num_cx+circuit.num_qubits)
+    qc.h(conq)
+    qc.measure(conq, meas)
+    qc.h(conq)
+    circuit_list.append(qc[:3])
+    del(qc)
     return circuit_list
 
 
