@@ -20,8 +20,8 @@
       "knitted": true,
       "start_qubit": 0,
       "end_qubit": 10,
-      "fermion_number": 0.5180831826401459,
-      "bootstrap_error": 0.021660983978774164
+      "fermion_number": 0.5168210628961464,
+      "bootstrap_error": 0.01940947142567695
     },
     {
       "simulator_seed": 1515068495,
@@ -36,8 +36,8 @@
       "knitted": true,
       "start_qubit": 0,
       "end_qubit": 10,
-      "fermion_number": 0.5237623762376241,
-      "bootstrap_error": 0.02405916066964277
+      "fermion_number": 0.5024378352023393,
+      "bootstrap_error": 0.021563727302453085
     },
     {
       "simulator_seed": 1534065469,
@@ -52,8 +52,8 @@
       "knitted": true,
       "start_qubit": 0,
       "end_qubit": 10,
-      "fermion_number": 0.4973262032085563,
-      "bootstrap_error": 0.022770612747599107
+      "fermion_number": 0.5160740379931814,
+      "bootstrap_error": 0.020214268183231215
     },
     {
       "simulator_seed": 9293616,
@@ -68,8 +68,8 @@
       "knitted": true,
       "start_qubit": 0,
       "end_qubit": 10,
-      "fermion_number": 0.5528375733855178,
-      "bootstrap_error": 0.021112447858060567
+      "fermion_number": 0.5138753651411881,
+      "bootstrap_error": 0.01895265039917426
     },
     {
       "simulator_seed": 1533043533,
@@ -84,8 +84,8 @@
       "knitted": true,
       "start_qubit": 0,
       "end_qubit": 10,
-      "fermion_number": 0.4697542533081293,
-      "bootstrap_error": 0.024047583378104843
+      "fermion_number": 0.5031707317073174,
+      "bootstrap_error": 0.01871945754610193
     },
     {
       "simulator_seed": 1985499667,
@@ -100,8 +100,8 @@
       "knitted": true,
       "start_qubit": 0,
       "end_qubit": 10,
-      "fermion_number": 0.5295652173913048,
-      "bootstrap_error": 0.023001086250859597
+      "fermion_number": 0.529541015625,
+      "bootstrap_error": 0.020357754107789797
     },
     {
       "simulator_seed": 1604086746,
@@ -116,8 +116,8 @@
       "knitted": true,
       "start_qubit": 0,
       "end_qubit": 10,
-      "fermion_number": 0.45746691871455714,
-      "bootstrap_error": 0.023184282763429164
+      "fermion_number": 0.5201750121536217,
+      "bootstrap_error": 0.023586149696793058
     },
     {
       "simulator_seed": 1000857777,
@@ -132,8 +132,8 @@
       "knitted": true,
       "start_qubit": 0,
       "end_qubit": 10,
-      "fermion_number": 0.5393772893772888,
-      "bootstrap_error": 0.022287381434700226
+      "fermion_number": 0.5156632403328444,
+      "bootstrap_error": 0.019761581308822312
     },
     {
       "simulator_seed": 1080100551,
@@ -148,8 +148,8 @@
       "knitted": true,
       "start_qubit": 0,
       "end_qubit": 10,
-      "fermion_number": 0.5082872928176796,
-      "bootstrap_error": 0.022232352040762675
+      "fermion_number": 0.5036746692797637,
+      "bootstrap_error": 0.021693484753058948
     },
     {
       "simulator_seed": 1642157479,
@@ -164,8 +164,8 @@
       "knitted": true,
       "start_qubit": 0,
       "end_qubit": 10,
-      "fermion_number": 0.4668930390492368,
-      "bootstrap_error": 0.023141778581032932
+      "fermion_number": 0.5095541401273871,
+      "bootstrap_error": 0.02105573832025221
     }
   ]
 }
