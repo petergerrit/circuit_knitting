@@ -1,46 +1,74 @@
 #!/usr/bin/env python
-"""Plot improved results with all points at same x position for comparison."""
+"""Plot improved and legacy results for comparison."""
 
 import json
 import numpy as np
 import matplotlib.pyplot as plt
 import os
 
-# Path to improved results
+# Paths to results
 improved_results_path = os.path.join("..", "improved", "results", "step1_knitted_10runs.json")
+legacy_results_path = os.path.join("..", "legacy", "results", "step1_knitted_10runs.json")
 
-# Load results
+
+# Load improved results
 with open(improved_results_path, 'r') as f:
-    data = json.load(f)
+    improved_data = json.load(f)
 
-# Extract fermion numbers and bootstrap errors
-fermion_numbers = [r['fermion_number'] for r in data['results']]
-bootstrap_errors = [r['bootstrap_error'] for r in data['results']]
-num_runs = len(fermion_numbers)
+# Extract improved fermion numbers and bootstrap errors
+imp_fermion_numbers = [r['fermion_number'] for r in improved_data['results']]
+imp_bootstrap_errors = [r['bootstrap_error'] for r in improved_data['results']]
+num_runs = len(imp_fermion_numbers)
 
-# Calculate statistics
-mean_fn = np.mean(fermion_numbers)
-std_fn = np.std(fermion_numbers)
+# Calculate improved statistics
+imp_mean_fn = np.mean(imp_fermion_numbers)
+imp_std_fn = np.std(imp_fermion_numbers)
+
+# Load legacy results
+with open(legacy_results_path, 'r') as f:
+    legacy_data = json.load(f)
+
+# Extract legacy fermion numbers and bootstrap errors
+leg_fermion_numbers = [r['fermion_number'] for r in legacy_data['results']]
+leg_bootstrap_errors = [r['bootstrap_error'] for r in legacy_data['results']]
+
+# Calculate legacy statistics
+leg_mean_fn = np.mean(leg_fermion_numbers)
+leg_std_fn = np.std(leg_fermion_numbers)
 
 # Create figure with single panel
 fig, ax = plt.subplots(figsize=(10, 8))
 
-# X position for improved results (will be used for legacy comparison later)
+# X positions
 x_improved = 1
+x_legacy = 2
 
-# Plot individual points with error bars
-# Use slight x offset for each point so they're visible but clustered
-x_positions = np.ones(num_runs) * x_improved
-# Add small jitter to avoid complete overlap
+# Plot improved individual points with error bars
+x_imp_positions = np.ones(num_runs) * x_improved
 jitter = np.linspace(-0.1, 0.1, num_runs)
-x_positions = x_positions + jitter
+x_imp_positions = x_imp_positions + jitter
 
-ax.scatter(x_positions, fermion_numbers, color='blue', label='Improved (individual)', s=100, alpha=0.6)
+ax.errorbar(x_imp_positions, imp_fermion_numbers, yerr=imp_bootstrap_errors, 
+            color='blue', marker='o', markersize=8, capsize=3, 
+            label='Improved (individual)', alpha=0.6, linestyle='none')
 
-# Plot average with error bar showing std dev
-ax.errorbar(x_improved, mean_fn, yerr=std_fn, 
-            color='red', marker='o', markersize=12, capsize=5, 
-            label=f'Improved: mean={mean_fn:.6f}, std={std_fn:.6f}')
+# Plot improved average with error bar showing std dev
+ax.errorbar(x_improved, imp_mean_fn, yerr=imp_std_fn, 
+            color='blue', marker='o', markersize=12, capsize=5, 
+            label=f'Improved: mean={imp_mean_fn:.6f}, std={imp_std_fn:.6f}')
+
+# Plot legacy individual points with error bars
+x_leg_positions = np.ones(num_runs) * x_legacy
+x_leg_positions = x_leg_positions + jitter
+
+ax.errorbar(x_leg_positions, leg_fermion_numbers, yerr=leg_bootstrap_errors, 
+            color='orange', marker='s', markersize=8, capsize=3, 
+            label='Legacy (individual)', alpha=0.6, linestyle='none')
+
+# Plot legacy average with error bar showing std dev
+ax.errorbar(x_legacy, leg_mean_fn, yerr=leg_std_fn, 
+            color='orange', marker='s', markersize=12, capsize=5, 
+            label=f'Legacy: mean={leg_mean_fn:.6f}, std={leg_std_fn:.6f}')
 
 ax.set_xlabel('Method')
 ax.set_ylabel('Fermion Number')
@@ -48,9 +76,8 @@ ax.set_title('Step 1: Fermion Number Comparison (10 runs each)')
 ax.legend()
 ax.grid(True, alpha=0.3)
 
-# Set x-axis ticks to accommodate future legacy points
-# Assuming legacy will be at x=2
-ax.set_xticks([x_improved, 2])
+# Set x-axis ticks
+ax.set_xticks([x_improved, x_legacy])
 ax.set_xticklabels(['Improved', 'Legacy'])
 
 plt.tight_layout()
@@ -64,5 +91,6 @@ print(f"Plot saved to {output_path}")
 plt.show()
 
 # Print summary statistics
-print("\n=== Improved Results Summary ===")
-print(f"Fermion Number: mean={mean_fn:.6f}, std={std_fn:.6f}")
+print("\n=== Results Summary ===")
+print(f"Improved - Fermion Number: mean={imp_mean_fn:.6f}, std={imp_std_fn:.6f}")
+print(f"Legacy   - Fermion Number: mean={leg_mean_fn:.6f}, std={leg_std_fn:.6f}")
