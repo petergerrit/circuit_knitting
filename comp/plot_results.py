@@ -57,7 +57,8 @@ band_width = 0.15
 x_imp_band = np.linspace(x_improved - band_width, x_improved + band_width, 100)
 ax.fill_between(x_imp_band, imp_mean_fn - imp_std_fn, imp_mean_fn + imp_std_fn,
                 color='blue', alpha=0.2, label=f'Improved: mean={imp_mean_fn:.6f}, std={imp_std_fn:.6f}')
-ax.scatter(x_improved, imp_mean_fn, color='blue', marker='o', s=100, zorder=3)
+ax.hlines(imp_mean_fn, x_improved - band_width, x_improved + band_width,
+          color='blue', linewidth=2, zorder=3)
 
 # Plot legacy individual points with error bars
 x_leg_positions = np.ones(num_runs) * x_legacy
@@ -71,7 +72,8 @@ ax.errorbar(x_leg_positions, leg_fermion_numbers, yerr=leg_bootstrap_errors,
 x_leg_band = np.linspace(x_legacy - band_width, x_legacy + band_width, 100)
 ax.fill_between(x_leg_band, leg_mean_fn - leg_std_fn, leg_mean_fn + leg_std_fn,
                 color='orange', alpha=0.2, label=f'Legacy: mean={leg_mean_fn:.6f}, std={leg_std_fn:.6f}')
-ax.scatter(x_legacy, leg_mean_fn, color='orange', marker='s', s=100, zorder=3)
+ax.hlines(leg_mean_fn, x_legacy - band_width, x_legacy + band_width,
+          color='orange', linewidth=2, zorder=3)
 
 ax.set_xlabel('Method')
 ax.set_ylabel('Fermion Number')
