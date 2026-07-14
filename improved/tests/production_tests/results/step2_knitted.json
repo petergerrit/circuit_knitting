@@ -1,0 +1,24 @@
+{
+  "experiment": "step2_knitted_varying_shots",
+  "base_seed": 42,
+  "starting_shots": 1024,
+  "powers_of_two": 10,
+  "results": [
+    {
+      "simulator_seed": 142,
+      "transpiler_seed": 143,
+      "bootstrap_seed": 144,
+      "trotter_step": 2,
+      "Nqbits": 12,
+      "epsilon": 0.8,
+      "mass": 1.125,
+      "insertion_point": 4,
+      "num_shots": 1024,
+      "knitted": true,
+      "start_qubit": 0,
+      "end_qubit": 10,
+      "fermion_number": 0.5329069911834096,
+      "bootstrap_error": 0.02194320074277886
+    }
+  ]
+}

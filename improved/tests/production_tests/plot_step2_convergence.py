@@ -20,7 +20,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspa
 
 results_dir = "results"
 input_file = os.path.join(results_dir, "step2_knitted.json")
-summary_file = os.path.join(results_dir, "step2_summary_seed42.json")
+summary_file = os.path.join(results_dir, "step2_nonknitted.json")
 output_file = os.path.join(results_dir, "step2_convergence_noiseless.pdf")
 
 # Load the combined results
