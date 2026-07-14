@@ -17,8 +17,8 @@
       "knitted": true,
       "start_qubit": 0,
       "end_qubit": 10,
-      "fermion_number": 0.6378986866791767,
-      "bootstrap_error": 0.023772145035906085
+      "fermion_number": 0.5241581259150792,
+      "bootstrap_error": 0.018691750645827974
     },
     {
       "simulator_seed": 145,
@@ -33,8 +33,8 @@
       "knitted": true,
       "start_qubit": 0,
       "end_qubit": 10,
-      "fermion_number": 0.5765639589168994,
-      "bootstrap_error": 0.014432208623226165
+      "fermion_number": 0.5190243902439028,
+      "bootstrap_error": 0.011592231877302824
     },
     {
       "simulator_seed": 148,
@@ -49,8 +49,8 @@
       "knitted": true,
       "start_qubit": 0,
       "end_qubit": 10,
-      "fermion_number": 0.6102564102564089,
-      "bootstrap_error": 0.01029249244470993
+      "fermion_number": 0.527899877899877,
+      "bootstrap_error": 0.008918858688002325
     },
     {
       "simulator_seed": 151,
@@ -65,8 +65,8 @@
       "knitted": true,
       "start_qubit": 0,
       "end_qubit": 10,
-      "fermion_number": 0.548498050905757,
-      "bootstrap_error": 0.008102123903192746
+      "fermion_number": 0.5186496550882123,
+      "bootstrap_error": 0.006403011340747127
     },
     {
       "simulator_seed": 154,
@@ -81,8 +81,8 @@
       "knitted": true,
       "start_qubit": 0,
       "end_qubit": 10,
-      "fermion_number": 0.5216200798630921,
-      "bootstrap_error": 0.005181943140498642
+      "fermion_number": 0.5151986815601535,
+      "bootstrap_error": 0.004934947198954433
     },
     {
       "simulator_seed": 157,
@@ -97,24 +97,8 @@
       "knitted": true,
       "start_qubit": 0,
       "end_qubit": 10,
-      "fermion_number": 0.5421887573284284,
-      "bootstrap_error": 0.0038364571158231715
-    },
-    {
-      "simulator_seed": 160,
-      "transpiler_seed": 161,
-      "bootstrap_seed": 162,
-      "trotter_step": 1,
-      "Nqbits": 12,
-      "epsilon": 0.8,
-      "mass": 1.125,
-      "insertion_point": 4,
-      "num_shots": 65536,
-      "knitted": true,
-      "start_qubit": 0,
-      "end_qubit": 10,
-      "fermion_number": 0.5171149144254292,
-      "bootstrap_error": 0.0025728098670837578
+      "fermion_number": 0.5191113416848507,
+      "bootstrap_error": 0.00297016473991581
     }
   ]
 }
