@@ -83,6 +83,38 @@
       "end_qubit": 10,
       "fermion_number": 0.5216200798630921,
       "bootstrap_error": 0.005181943140498642
+    },
+    {
+      "simulator_seed": 157,
+      "transpiler_seed": 158,
+      "bootstrap_seed": 159,
+      "trotter_step": 1,
+      "Nqbits": 12,
+      "epsilon": 0.8,
+      "mass": 1.125,
+      "insertion_point": 4,
+      "num_shots": 32768,
+      "knitted": true,
+      "start_qubit": 0,
+      "end_qubit": 10,
+      "fermion_number": 0.5421887573284284,
+      "bootstrap_error": 0.0038364571158231715
+    },
+    {
+      "simulator_seed": 160,
+      "transpiler_seed": 161,
+      "bootstrap_seed": 162,
+      "trotter_step": 1,
+      "Nqbits": 12,
+      "epsilon": 0.8,
+      "mass": 1.125,
+      "insertion_point": 4,
+      "num_shots": 65536,
+      "knitted": true,
+      "start_qubit": 0,
+      "end_qubit": 10,
+      "fermion_number": 0.5171149144254292,
+      "bootstrap_error": 0.0025728098670837578
     }
   ]
 }
