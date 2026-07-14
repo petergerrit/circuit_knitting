@@ -52,10 +52,12 @@ ax.errorbar(x_imp_positions, imp_fermion_numbers, yerr=imp_bootstrap_errors,
             color='blue', marker='o', markersize=8, capsize=3, 
             label='Improved (individual)', alpha=0.6, linestyle='none')
 
-# Plot improved average with error bar showing std dev
-ax.errorbar(x_improved, imp_mean_fn, yerr=imp_std_fn, 
-            color='blue', marker='o', markersize=12, capsize=5, 
-            label=f'Improved: mean={imp_mean_fn:.6f}, std={imp_std_fn:.6f}')
+# Plot improved average band
+band_width = 0.15
+x_imp_band = np.linspace(x_improved - band_width, x_improved + band_width, 100)
+ax.fill_between(x_imp_band, imp_mean_fn - imp_std_fn, imp_mean_fn + imp_std_fn,
+                color='blue', alpha=0.2, label=f'Improved: mean={imp_mean_fn:.6f}, std={imp_std_fn:.6f}')
+ax.scatter(x_improved, imp_mean_fn, color='blue', marker='o', s=100, zorder=3)
 
 # Plot legacy individual points with error bars
 x_leg_positions = np.ones(num_runs) * x_legacy
@@ -65,10 +67,11 @@ ax.errorbar(x_leg_positions, leg_fermion_numbers, yerr=leg_bootstrap_errors,
             color='orange', marker='s', markersize=8, capsize=3, 
             label='Legacy (individual)', alpha=0.6, linestyle='none')
 
-# Plot legacy average with error bar showing std dev
-ax.errorbar(x_legacy, leg_mean_fn, yerr=leg_std_fn, 
-            color='orange', marker='s', markersize=12, capsize=5, 
-            label=f'Legacy: mean={leg_mean_fn:.6f}, std={leg_std_fn:.6f}')
+# Plot legacy average band
+x_leg_band = np.linspace(x_legacy - band_width, x_legacy + band_width, 100)
+ax.fill_between(x_leg_band, leg_mean_fn - leg_std_fn, leg_mean_fn + leg_std_fn,
+                color='orange', alpha=0.2, label=f'Legacy: mean={leg_mean_fn:.6f}, std={leg_std_fn:.6f}')
+ax.scatter(x_legacy, leg_mean_fn, color='orange', marker='s', s=100, zorder=3)
 
 ax.set_xlabel('Method')
 ax.set_ylabel('Fermion Number')
