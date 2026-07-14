@@ -2,9 +2,11 @@
 """
 Plot fermion number convergence as a function of shots for step 1 knitted results.
 
-Loads results from step1_knitted_all_shots.json and plots fermion number
+Loads results from step1_knitted.json and plots fermion number
 with bootstrap error bars vs. number of shots.
-Also adds fermion number with bootstrap error band from step1_summary_seed42.json.
+Also adds fermion number with bootstrap error band from step1_nonknitted.json.
+
+Works with partial data - will plot however many results are available.
 """
 
 import sys
@@ -17,25 +19,44 @@ import matplotlib.pyplot as plt
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
 results_dir = "results"
-input_file = os.path.join(results_dir, "step1_knitted_all_shots.json")
-summary_file = os.path.join(results_dir, "step1_summary_seed42.json")
+input_file = os.path.join(results_dir, "step1_knitted.json")
+summary_file = os.path.join(results_dir, "step1_nonknitted.json")
 output_file = os.path.join(results_dir, "step1_convergence_noiseless.pdf")
 
 # Load the combined results
-with open(input_file, 'r') as f:
-    data = json.load(f)
+try:
+    with open(input_file, 'r') as f:
+        data = json.load(f)
+except FileNotFoundError:
+    print(f"No knitted results found at {input_file}")
+    data = {"results": []}
 
 # Extract shot counts, fermion numbers, and errors
-shots = [r['num_shots'] for r in data['results']]
-fermion_numbers = [r['fermion_number'] for r in data['results']]
-bootstrap_errors = [r['bootstrap_error'] for r in data['results']]
+results = data.get('results', [])
+if results:
+    shots = [r['num_shots'] for r in results]
+    fermion_numbers = [r['fermion_number'] for r in results]
+    bootstrap_errors = [r['bootstrap_error'] for r in results]
+else:
+    shots = []
+    fermion_numbers = []
+    bootstrap_errors = []
+
+# Check if we have any data to plot
+if not shots:
+    print("No knitted results to plot.")
+    sys.exit(0)
 
 # Load summary data for error band
-with open(summary_file, 'r') as f:
-    summary = json.load(f)
-
-summary_fermion = summary['fermion_number']
-summary_error = summary['bootstrap_error']
+try:
+    with open(summary_file, 'r') as f:
+        summary = json.load(f)
+    summary_fermion = summary['fermion_number']
+    summary_error = summary['bootstrap_error']
+    has_summary = True
+except FileNotFoundError:
+    print(f"No non-knitted summary found at {summary_file}")
+    has_summary = False
 
 # Get data range for x-axis
 x_min = min(shots)
@@ -52,17 +73,19 @@ plt.xscale('log')
 # Set x-axis limits with more padding so error bars fit
 plt.xlim(x_min / 1.20, x_max * 1.20)
 
-# Add error band across entire plot width (edge to edge)
-# Use the actual axis limits to extend to edges
-ax = plt.gca()
-band_x_min, band_x_max = ax.get_xlim()
-plt.fill_between([band_x_min, band_x_max], 
-                 [summary_fermion - summary_error, summary_fermion - summary_error],
-                 [summary_fermion + summary_error, summary_fermion + summary_error],
-                 color='red', alpha=0.2)
+# Add error band and reference line if we have summary data
+if has_summary:
+    # Add error band across entire plot width (edge to edge)
+    # Use the actual axis limits to extend to edges
+    ax = plt.gca()
+    band_x_min, band_x_max = ax.get_xlim()
+    plt.fill_between([band_x_min, band_x_max], 
+                     [summary_fermion - summary_error, summary_fermion - summary_error],
+                     [summary_fermion + summary_error, summary_fermion + summary_error],
+                     color='red', alpha=0.2)
 
-# Add horizontal line for summary fermion number
-plt.axhline(y=summary_fermion, color='red', linestyle='--', linewidth=2)
+    # Add horizontal line for summary fermion number
+    plt.axhline(y=summary_fermion, color='red', linestyle='--', linewidth=2)
 plt.xlabel('Number of Shots', fontsize=24)
 plt.ylabel('Fermion Number', fontsize=24)
 plt.title('Step 1 Fermion Number Convergence (Noiseless)', fontsize=28)
@@ -125,9 +148,17 @@ class KnittedHandler(hl.HandlerBase):
 knitted_proxy = Rectangle((0, 0), 1, 1, visible=False)
 summary_proxy = Line2D([0], [0], color='red', linestyle='--', linewidth=2, visible=False)
 
-plt.legend([knitted_proxy, summary_proxy],
-           [f'knitted results', f'non-knitted result\n({summary["num_shots"]} shots)'],
-           handler_map={Rectangle: KnittedHandler(), Line2D: SummaryHandler()},
+legend_labels = ['knitted results']
+legend_handlers = [knitted_proxy]
+legend_handler_map = {Rectangle: KnittedHandler()}
+
+if has_summary:
+    legend_labels.append(f'non-knitted result\n({summary["num_shots"]} shots)')
+    legend_handlers.append(summary_proxy)
+    legend_handler_map[Line2D] = SummaryHandler()
+
+plt.legend(legend_handlers, legend_labels,
+           handler_map=legend_handler_map,
            fontsize=20)
 
 plt.tight_layout()

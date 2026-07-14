@@ -31,8 +31,9 @@ mass = 1.125
 insertion_point = 4  # Insertion point index for meson operator
 num_shots = 1024**2
 starting_shots = 1024
-powers_of_two = 6
+powers_of_two = 10  # 1024 * 2^10 = 1024^2, so runs: 1024, 2048, ..., 1048576 (11 runs)
 results_dir = "results"
+base_seed = 42
 
 # Create results directory if it doesn't exist
 os.makedirs(results_dir, exist_ok=True)
@@ -41,13 +42,21 @@ os.makedirs(results_dir, exist_ok=True)
 circuit = trotter_stepper(1, Nqbits, epsilon, mass, insertion_point)
 
 
-def save_step1_fermion_number():
-    """Create step 1 circuit, measure fermion number, compute bootstrap error, and save to file."""
+def save_step1_fermion_number(sim_seed, bs_seed):
+    """Create step 1 circuit, measure fermion number, compute bootstrap error, and save to file.
+    
+    Args:
+        sim_seed: Seed for the simulator
+        bs_seed: Seed for bootstrap error calculation
+    
+    Returns:
+        tuple: (fermion_number, bootstrap_error, summary)
+    """
     circuit.measure_all()
     
     # Run on simulator
     backend = AerSimulator()
-    backend.set_options(seed_simulator=42)
+    backend.set_options(seed_simulator=sim_seed)
     pass_manager = generate_preset_pass_manager(optimization_level=3, backend=backend)
     transpiled_circuit = pass_manager.run(circuit)
     
@@ -58,15 +67,11 @@ def save_step1_fermion_number():
     
     # Calculate fermion number
     fn = fermion_number(counts, insertion_point)
-    # print(f"Fermion number: {fn}")
     
     # Calculate bootstrap error
-    boot_err = bootstrap_error(counts, insertion_point, num_shots, seed=42)
-    # print(f"Bootstrap error: {boot_err}")
+    boot_err = bootstrap_error(counts, insertion_point, num_shots, seed=bs_seed)
     
-    # Save summary results to JSON
-    sim_seed = 42
-    bs_seed = 42
+    # Build summary
     summary = {
         "simulator_seed": sim_seed,
         "bootstrap_seed": bs_seed,
@@ -77,21 +82,21 @@ def save_step1_fermion_number():
         "insertion_point": insertion_point,
         "num_shots": num_shots,
         "fermion_number": fn,
-        "bootstrap_error": boot_err
+        "bootstrap_error": boot_err,
+        "knitted": False
     }
-    summary_filename = os.path.join(results_dir, f"step1_summary_seed{sim_seed}.json")
-    with open(summary_filename, 'w') as f:
-        json.dump(summary, f, indent=2)
-    # print(f"Saved summary to {summary_filename}")
     
-    return fn, boot_err, summary_filename
+    return fn, boot_err, summary
 
 
-def save_step1_fermion_number_knitted(num_shots):
-    """Run the step 1 circuit through circuit knitter, measure fermion number, compute bootstrap error, and return results.
+def save_step1_fermion_number_knitted(num_shots, sim_seed, tp_seed, bs_seed):
+    """Run the step 1 circuit through circuit knitter, measure fermion number, compute bootstrap error.
     
     Args:
         num_shots: Number of shots to run the circuit with.
+        sim_seed: Seed for the simulator.
+        tp_seed: Seed for the transpiler.
+        bs_seed: Seed for bootstrap error calculation.
     
     Returns:
         dict: Summary containing fermion number and bootstrap error for the given shot count.
@@ -107,23 +112,17 @@ def save_step1_fermion_number_knitted(num_shots):
         end_qubit=10,
         num_shots=num_shots,
         config=config,
-        simulator_seed=42,
-        transpiler_seed=42
+        simulator_seed=sim_seed,
+        transpiler_seed=tp_seed
     )
     
     counts = knitted_results['results']
     
     # Calculate fermion number
     fn = fermion_number(counts, insertion_point)
-    # print(f"Knitted fermion number: {fn}")
     
     # Calculate bootstrap error
-    boot_err = bootstrap_error(counts, insertion_point, num_shots, seed=42)
-    # print(f"Knitted bootstrap error: {boot_err}")
-    
-    sim_seed = 42
-    tp_seed = 42
-    bs_seed = 42
+    boot_err = bootstrap_error(counts, insertion_point, num_shots, seed=bs_seed)
     
     summary = {
         "simulator_seed": sim_seed,
@@ -146,29 +145,37 @@ def save_step1_fermion_number_knitted(num_shots):
 
 
 if __name__ == "__main__":
-    # print("Running first Trotter step fermion number analysis...")
-    fermion_num, error, summary_file = save_step1_fermion_number()
-    # print(f"\nFirst Trotter step fermion number: {fermion_num:.4f} +/- {error:.4f}")
+    base_sim_seed = base_seed
+    base_bs_seed = base_seed + 1
+    fermion_num, error, nonknitted_summary = save_step1_fermion_number(base_sim_seed, base_bs_seed)
     
-    # Run knitted analysis with varying shots and collect all results
-    # print("\nRunning knitted first Trotter step fermion number analysis with varying shots...")
-    all_knitted_results = []
-    for power in range(powers_of_two + 1):
-        current_shots = starting_shots * 2**power
-        summary = save_step1_fermion_number_knitted(current_shots)
-        all_knitted_results.append(summary)
-        # print(f"\nKnitted first Trotter step fermion number ({current_shots} shots): {summary['fermion_number']:.4f} +/- {summary['bootstrap_error']:.4f}")
+    # Save non-knitted result to its own file
+    nonknitted_filename = os.path.join(results_dir, "step1_nonknitted.json")
+    with open(nonknitted_filename, 'w') as f:
+        json.dump(nonknitted_summary, f, indent=2)
     
-    # Save all knitted results to a single JSON file
-    combined_summary = {
+    # Run knitted analysis with varying shots
+    knitted_filename = os.path.join(results_dir, "step1_knitted.json")
+    
+    # Initialize metadata
+    knitted_metadata = {
         "experiment": "step1_knitted_varying_shots",
+        "base_seed": base_seed,
         "starting_shots": starting_shots,
         "powers_of_two": powers_of_two,
-        "results": all_knitted_results
+        "results": []
     }
-    combined_filename = os.path.join(results_dir, "step1_knitted_all_shots.json")
-    with open(combined_filename, 'w') as f:
-        json.dump(combined_summary, f, indent=2)
-    # print(f"\nSaved all knitted results to {combined_filename}")
     
-    # print("\nAll results saved to the 'results/' directory.")
+    for power in range(powers_of_two + 1):
+        current_shots = starting_shots * 2**power
+        # Generate unique seeds for this run
+        sim_seed = base_seed + 100 + power * 3
+        tp_seed = base_seed + 101 + power * 3
+        bs_seed = base_seed + 102 + power * 3
+        
+        summary = save_step1_fermion_number_knitted(current_shots, sim_seed, tp_seed, bs_seed)
+        knitted_metadata["results"].append(summary)
+        
+        # Save knitted results so far (appending by overwriting with full data)
+        with open(knitted_filename, 'w') as f:
+            json.dump(knitted_metadata, f, indent=2)
