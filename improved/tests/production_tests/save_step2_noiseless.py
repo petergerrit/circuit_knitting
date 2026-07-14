@@ -150,25 +150,26 @@ if __name__ == "__main__":
     fermion_num, error, summary_file = save_step2_fermion_number()
     # print(f"\nSecond Trotter step fermion number: {fermion_num:.4f} +/- {error:.4f}")
     
-    # Run knitted analysis with varying shots and collect all results
+    # Run knitted analysis with varying shots and save incrementally
     # print("\nRunning knitted second Trotter step fermion number analysis with varying shots...")
-    all_knitted_results = []
-    for power in range(powers_of_two + 1):
-        current_shots = starting_shots * 2**power
-        summary = save_step2_fermion_number_knitted(current_shots)
-        all_knitted_results.append(summary)
-        # print(f"\nKnitted second Trotter step fermion number ({current_shots} shots): {summary['fermion_number']:.4f} +/- {summary['bootstrap_error']:.4f}")
-    
-    # Save all knitted results to a single JSON file
     combined_summary = {
         "experiment": "step2_knitted_varying_shots",
         "starting_shots": starting_shots,
         "powers_of_two": powers_of_two,
-        "results": all_knitted_results
+        "results": []
     }
-    combined_filename = os.path.join(results_dir, "step2_knitted_all_shots.json")
-    with open(combined_filename, 'w') as f:
-        json.dump(combined_summary, f, indent=2)
+    combined_filename = os.path.join(results_dir, "step2_knitted.json")
+    
+    for power in range(powers_of_two + 1):
+        current_shots = starting_shots * 2**power
+        summary = save_step2_fermion_number_knitted(current_shots)
+        combined_summary["results"].append(summary)
+        # print(f"\nKnitted second Trotter step fermion number ({current_shots} shots): {summary['fermion_number']:.4f} +/- {summary['bootstrap_error']:.4f}")
+        
+        # Save results so far (incremental update)
+        with open(combined_filename, 'w') as f:
+            json.dump(combined_summary, f, indent=2)
+    
     # print(f"\nSaved all knitted results to {combined_filename}")
     
     # print("\nAll results saved to the 'results/' directory.")
