@@ -1,0 +1,15 @@
+Running noise effect test for first Trotter step (shots=128)
+======================================================================
+
+Performing 1st run (noiseless; simulator_seed=42, transpiler_seed=42)...
+1st run fermion number: 0.49800000000000033
+
+Performing 2nd run (noisy; simulator_seed=42, transpiler_seed=42)...
+2nd run fermion number: 0.4729166666666663
+
+======================================================================
+TEST SUMMARY
+======================================================================
+✓ PASS: 1 != 2 - Fermion numbers differ: 0.49800000000000033 vs 0.4729166666666663
+
+✓ ALL TESTS PASSED

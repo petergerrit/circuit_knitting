@@ -1,0 +1,35 @@
+Running all seed tests for second Trotter step (noisy, shots=256)
+======================================================================
+
+Performing 1st run (simulator_seed=42, transpiler_seed=42, bootstrap_seed=42)...
+1st run fermion number: 0.6086215294690692
+1st run bootstrap error: 0.04561354401873657
+
+Performing 2nd run (simulator_seed=42, transpiler_seed=42, bootstrap_seed=42)...
+2nd run fermion number: 0.6086215294690692
+2nd run bootstrap error: 0.04561354401873657
+
+Performing 3rd run (simulator_seed=42, transpiler_seed=42, bootstrap_seed=123)...
+3rd run fermion number: 0.6086215294690692
+3rd run bootstrap error: 0.04547215609557643
+
+Performing 4th run (simulator_seed=123, transpiler_seed=42, bootstrap_seed=42)...
+4th run fermion number: 0.5654672663668161
+4th run bootstrap error: 0.04409524769338103
+
+Performing 5th run (noisy; simulator_seed=42, transpiler_seed=123, bootstrap_seed=42; shots=256)...
+5th run fermion number: 0.5393657736468022
+5th run bootstrap error: 0.046142238135321506
+
+Comparing runs 4 and 5 fermion numbers...
+
+======================================================================
+TEST SUMMARY
+======================================================================
+✓ PASS: 1 == 2 - Fermion numbers and bootstrap errors match: 0.6086215294690692 == 0.6086215294690692, 0.04561354401873657 == 0.04561354401873657
+✓ PASS: 1 != 3 - Fermion numbers match and bootstrap errors differ: 0.6086215294690692 == 0.6086215294690692, 0.04561354401873657 != 0.04547215609557643
+✓ PASS: 1 != 4 - Fermion numbers differ: 0.6086215294690692 vs 0.5654672663668161
+✓ PASS: 1 != 5 - Fermion numbers differ: 0.6086215294690692 vs 0.5393657736468022
+✓ PASS: 4 != 5 - Fermion numbers differ: 0.5654672663668161 vs 0.5393657736468022
+
+✓ ALL TESTS PASSED
