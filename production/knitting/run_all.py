@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Run all 8 non-knitted production scripts sequentially.
+Run all 9 knitted production scripts sequentially.
 """
 
 import subprocess

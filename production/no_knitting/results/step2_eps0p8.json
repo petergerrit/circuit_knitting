@@ -9,9 +9,9 @@
   "insertion_point": 4,
   "results": [
     {
-      "simulator_seed": 1426855047,
-      "transpiler_seed": 889324234,
-      "bootstrap_seed": 506320076,
+      "simulator_seed": 1930350669,
+      "transpiler_seed": 1202343140,
+      "bootstrap_seed": 1646427691,
       "trotter_step": 2,
       "Nqbits": 12,
       "epsilon": 0.8,
@@ -19,13 +19,13 @@
       "insertion_point": 4,
       "num_shots": 16384,
       "knitted": false,
-      "fermion_number": 0.5606689453125,
-      "bootstrap_error": 0.003888197718116432
+      "fermion_number": 0.55633544921875,
+      "bootstrap_error": 0.004256469225944309
     },
     {
-      "simulator_seed": 385513367,
-      "transpiler_seed": 173605400,
-      "bootstrap_seed": 550521869,
+      "simulator_seed": 1340112167,
+      "transpiler_seed": 1135090858,
+      "bootstrap_seed": 1282200668,
       "trotter_step": 2,
       "Nqbits": 12,
       "epsilon": 0.8,
@@ -33,13 +33,13 @@
       "insertion_point": 4,
       "num_shots": 16384,
       "knitted": false,
-      "fermion_number": 0.552001953125,
-      "bootstrap_error": 0.0038919337189525175
+      "fermion_number": 0.548095703125,
+      "bootstrap_error": 0.004103179385877262
     },
     {
-      "simulator_seed": 228464819,
-      "transpiler_seed": 849383545,
-      "bootstrap_seed": 1188459965,
+      "simulator_seed": 338720294,
+      "transpiler_seed": 234679962,
+      "bootstrap_seed": 1920801880,
       "trotter_step": 2,
       "Nqbits": 12,
       "epsilon": 0.8,
@@ -47,13 +47,13 @@
       "insertion_point": 4,
       "num_shots": 16384,
       "knitted": false,
-      "fermion_number": 0.53662109375,
-      "bootstrap_error": 0.004193850390359758
+      "fermion_number": 0.537841796875,
+      "bootstrap_error": 0.0036941959295079038
     },
     {
-      "simulator_seed": 1538790136,
-      "transpiler_seed": 797789893,
-      "bootstrap_seed": 747892328,
+      "simulator_seed": 1147336193,
+      "transpiler_seed": 1605292149,
+      "bootstrap_seed": 929161790,
       "trotter_step": 2,
       "Nqbits": 12,
       "epsilon": 0.8,
@@ -61,13 +61,13 @@
       "insertion_point": 4,
       "num_shots": 16384,
       "knitted": false,
-      "fermion_number": 0.554443359375,
-      "bootstrap_error": 0.0037190737122601565
+      "fermion_number": 0.531005859375,
+      "bootstrap_error": 0.0037451061959832745
     },
     {
-      "simulator_seed": 1628675271,
-      "transpiler_seed": 1411553555,
-      "bootstrap_seed": 2024799093,
+      "simulator_seed": 468297708,
+      "transpiler_seed": 2141521713,
+      "bootstrap_seed": 967096343,
       "trotter_step": 2,
       "Nqbits": 12,
       "epsilon": 0.8,
@@ -75,13 +75,13 @@
       "insertion_point": 4,
       "num_shots": 16384,
       "knitted": false,
-      "fermion_number": 0.545166015625,
-      "bootstrap_error": 0.0037933739486004283
+      "fermion_number": 0.5513916015625,
+      "bootstrap_error": 0.004050687479830151
     },
     {
-      "simulator_seed": 1819673571,
-      "transpiler_seed": 85534361,
-      "bootstrap_seed": 136878075,
+      "simulator_seed": 2117471760,
+      "transpiler_seed": 224251304,
+      "bootstrap_seed": 1800018412,
       "trotter_step": 2,
       "Nqbits": 12,
       "epsilon": 0.8,
@@ -89,13 +89,13 @@
       "insertion_point": 4,
       "num_shots": 16384,
       "knitted": false,
-      "fermion_number": 0.54010009765625,
-      "bootstrap_error": 0.003681243298286465
+      "fermion_number": 0.53558349609375,
+      "bootstrap_error": 0.0033610195747544344
     },
     {
-      "simulator_seed": 2109009639,
-      "transpiler_seed": 1666228099,
-      "bootstrap_seed": 155535931,
+      "simulator_seed": 2138273570,
+      "transpiler_seed": 1582378346,
+      "bootstrap_seed": 808231168,
       "trotter_step": 2,
       "Nqbits": 12,
       "epsilon": 0.8,
@@ -103,13 +103,13 @@
       "insertion_point": 4,
       "num_shots": 16384,
       "knitted": false,
-      "fermion_number": 0.53424072265625,
-      "bootstrap_error": 0.004129454597071472
+      "fermion_number": 0.54107666015625,
+      "bootstrap_error": 0.004026510305958255
     },
     {
-      "simulator_seed": 1439822602,
-      "transpiler_seed": 1876961679,
-      "bootstrap_seed": 17860543,
+      "simulator_seed": 1746235847,
+      "transpiler_seed": 1296703908,
+      "bootstrap_seed": 129880704,
       "trotter_step": 2,
       "Nqbits": 12,
       "epsilon": 0.8,
@@ -117,13 +117,13 @@
       "insertion_point": 4,
       "num_shots": 16384,
       "knitted": false,
-      "fermion_number": 0.5484619140625,
-      "bootstrap_error": 0.0037418630853568078
+      "fermion_number": 0.57354736328125,
+      "bootstrap_error": 0.003870492158985068
     },
     {
-      "simulator_seed": 1038675150,
-      "transpiler_seed": 626868003,
-      "bootstrap_seed": 1751538353,
+      "simulator_seed": 49554192,
+      "transpiler_seed": 203768094,
+      "bootstrap_seed": 777953109,
       "trotter_step": 2,
       "Nqbits": 12,
       "epsilon": 0.8,
@@ -131,13 +131,13 @@
       "insertion_point": 4,
       "num_shots": 16384,
       "knitted": false,
-      "fermion_number": 0.5369873046875,
-      "bootstrap_error": 0.004251680070119975
+      "fermion_number": 0.56036376953125,
+      "bootstrap_error": 0.004094847632086907
     },
     {
-      "simulator_seed": 1160876433,
-      "transpiler_seed": 740760529,
-      "bootstrap_seed": 1751232107,
+      "simulator_seed": 506790575,
+      "transpiler_seed": 468816221,
+      "bootstrap_seed": 1173147361,
       "trotter_step": 2,
       "Nqbits": 12,
       "epsilon": 0.8,
@@ -145,8 +145,8 @@
       "insertion_point": 4,
       "num_shots": 16384,
       "knitted": false,
-      "fermion_number": 0.543701171875,
-      "bootstrap_error": 0.003471490127817974
+      "fermion_number": 0.537353515625,
+      "bootstrap_error": 0.0037534326002466776
     }
   ]
 }
