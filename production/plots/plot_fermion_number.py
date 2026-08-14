@@ -55,14 +55,18 @@ def main():
     no_knit_fermion = np.load(os.path.join(resampling_dir, 'no_knit_resampled_fermion_number.npy'))
     no_knit_std = np.load(os.path.join(resampling_dir, 'no_knit_resampled_std.npy'))
     
-    # Load exact data for continuous black line
+    # Load exact data for continuous black line from JSON
     exact_dir = os.path.join(os.path.dirname(OUTPUT_DIR), 'exact')
-    ferm_num_exact = np.load(os.path.join(exact_dir, 'ferm_num_exact_no_noise_no_knit.npy'))
-    # Trim exact data to match trotter_steps length (as done in notebook line 211)
-    ferm_num_exact = ferm_num_exact[:len(trotter_steps)]
+    exact_json_path = os.path.join(exact_dir, 'results', 'exact_eps0p05.json')
+    with open(exact_json_path, 'r') as f:
+        exact_data = json.load(f)
+    # Extract all 33 points with their times (t=0.0 to 1.6 in 0.05 steps)
+    exact_steps = sorted(exact_data['steps'], key=lambda x: x['trotter_step'])
+    exact_times = np.array([step['time'] for step in exact_steps])
+    ferm_num_exact = np.array([step['result']['fermion_number'] for step in exact_steps])
     
-    # Plot exact line (continuous black line)
-    ax.plot(trotter_steps, ferm_num_exact, color='black', label='exact')
+    # Plot exact line (continuous black line) - all 33 points
+    ax.plot(exact_times, ferm_num_exact, color='black', label='exact')
     
     # Load all JSON data for individual points
     knitting_dir = os.path.join(os.path.dirname(OUTPUT_DIR), 'knitting', 'results')
