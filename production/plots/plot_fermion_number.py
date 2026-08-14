@@ -60,12 +60,16 @@ def main():
     exact_json_path = os.path.join(exact_dir, 'results', 'exact_eps0p05.json')
     with open(exact_json_path, 'r') as f:
         exact_data = json.load(f)
-    # Extract all 33 points with their times (t=0.0 to 1.6 in 0.05 steps)
+    # Extract 9 points with their times (t=0.0 to 1.6 in 0.2 steps)
     exact_steps = sorted(exact_data['steps'], key=lambda x: x['trotter_step'])
     exact_times = np.array([step['time'] for step in exact_steps])
     ferm_num_exact = np.array([step['result']['fermion_number'] for step in exact_steps])
+    # Filter to keep only times at multiples of 0.2: 0.0, 0.2, 0.4, ..., 1.6
+    mask = np.isclose(exact_times % 0.2, 0, atol=1e-8)
+    exact_times = exact_times[mask]
+    ferm_num_exact = ferm_num_exact[mask]
     
-    # Plot exact line (continuous black line) - all 33 points
+    # Plot exact line (continuous black line) - 9 points
     ax.plot(exact_times, ferm_num_exact, color='black', label='exact')
     
     # Load all JSON data for individual points
