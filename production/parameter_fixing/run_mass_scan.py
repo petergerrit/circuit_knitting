@@ -15,12 +15,12 @@ Total: 3 masses × 33 steps = 99 data points
 import sys
 import os
 import json
-import numpy as np
+import random
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
 from circuits.basic_circuits import trotter_stepper
-from circuit_utils.statistics import fermion_number
+from circuit_utils.statistics import fermion_number, bootstrap_error
 from qiskit import transpile
 from qiskit_aer import AerSimulator
 from qiskit_ibm_runtime import SamplerV2
@@ -47,7 +47,7 @@ os.makedirs(DATA_DIR, exist_ok=True)
 def run_noiseless_simulation(epsilon, mass, trotter_step, num_shots=1024):
     """
     Run a single noiseless simulation for given parameters.
-    Returns fermion_number.
+    Returns (fermion_number, bootstrap_error).
     """
     circuit = trotter_stepper(trotter_step, Nqbits, epsilon, mass, insertion_point)
     circuit.measure_all()
@@ -65,7 +65,9 @@ def run_noiseless_simulation(epsilon, mass, trotter_step, num_shots=1024):
     counts = result.data.meas.get_counts()
 
     fn = fermion_number(counts, insertion_point)
-    return fn
+    boot_err = bootstrap_error(counts, insertion_point, num_shots, seed=random.randint(0, 2**31-1))
+    
+    return fn, boot_err
 
 
 def main():
@@ -76,14 +78,13 @@ def main():
         mass_key = f"m{str(mass).replace('.', 'p')}"
         all_data[mass_key] = {
             "fermion_numbers": [],
-            "trotter_steps": [],
-            "time_steps": []
+            "bootstrap_errors": []
         }
         
         for i, (trotter_step, t) in enumerate(zip(trotter_steps, time_steps)):
             print(f"Running mass={mass}, trotter_step={trotter_step}, t={t}")
             
-            fn = run_noiseless_simulation(
+            fn, boot_err = run_noiseless_simulation(
                 epsilon=epsilon,
                 mass=mass,
                 trotter_step=trotter_step,
@@ -91,17 +92,15 @@ def main():
             )
             
             all_data[mass_key]["fermion_numbers"].append(fn)
-            all_data[mass_key]["trotter_steps"].append(trotter_step)
-            all_data[mass_key]["time_steps"].append(t)
+            all_data[mass_key]["bootstrap_errors"].append(boot_err)
     
-    # Save raw data
+    # Save data with time_steps only at top level
     filename = f"mass_scan_noiseless_eps{epsilon}_shots{num_shots}.json"
     with open(os.path.join(DATA_DIR, filename), 'w') as f:
         json.dump({
             "epsilon": epsilon,
             "num_shots": num_shots,
             "masses": masses,
-            "trotter_steps": trotter_steps,
             "time_steps": time_steps,
             "data": all_data
         }, f, indent=2)

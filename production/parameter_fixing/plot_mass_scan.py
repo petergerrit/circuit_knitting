@@ -25,26 +25,28 @@ def load_data(filename):
 
 
 def plot_mass_scan():
-    """Generate mass scan plot using Hank's style."""
+    """Generate mass scan plot using Hank's style with error bars."""
     # Load data from run_mass_scan.py output
     data = load_data("mass_scan_noiseless_eps0.05_shots1024.json")
     
     time_steps = data["time_steps"]
-    masses = data["masses"]
     
     plt.figure(figsize=(10, 6))
     
-    # Plot each mass
+    # Plot each mass with Hank's style: scatter + plot + errorbar
     mass_keys = {"m1p0": (1.0, hank_blue, "$m=1$"),
                  "m1p125": (1.125, hank_orange, "$m=1.125$"),
                  "m1p25": (1.25, hank_green, "$m=1.25$")}
     
     for mass_key, (mass_val, color, label) in mass_keys.items():
         fermion_numbers = data["data"][mass_key]["fermion_numbers"]
+        bootstrap_errors = data["data"][mass_key]["bootstrap_errors"]
         
-        # Hank's style: scatter + plot
+        # Hank's style: scatter + plot + errorbar
         plt.scatter(time_steps, fermion_numbers, color=color, s=30)
         plt.plot(time_steps, fermion_numbers, color=color, label=label, alpha=0.7)
+        plt.errorbar(time_steps, fermion_numbers, bootstrap_errors, 
+                     alpha=0.2, ls='none', color=color)
     
     plt.xlabel('evolution time')
     plt.ylabel('fermion number')
