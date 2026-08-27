@@ -6,7 +6,7 @@ Runs simulations for:
 - 3 mass values: 1.0, 1.125, 1.25
 - epsilon = 0.05 (fixed)
 - 33 trotter steps: 0, 4, 8, ..., 128 (corresponding to t = 0, 0.2, ..., 6.4)
-- 1024 shots per data point
+- 1024^2 shots per data point
 - Noiseless (AerSimulator without hardware noise model)
 
 Total: 3 masses × 33 steps = 99 data points
@@ -30,7 +30,7 @@ from qiskit_ibm_runtime import SamplerV2
 # Configuration
 Nqbits = 12
 insertion_point = 4
-num_shots = 1024
+num_shots = 1024 ** 2
 epsilon = 0.05
 noiseless = True
 
@@ -50,7 +50,7 @@ filename = "mass_scan.json"
 filepath = os.path.join(DATA_DIR, filename)
 
 
-def run_noiseless_simulation(epsilon, mass, trotter_step, num_shots=1024):
+def run_noiseless_simulation(epsilon, mass, trotter_step, num_shots=1024**2):
     """
     Run a single noiseless simulation for given parameters.
     Returns (fermion_number, bootstrap_error).
