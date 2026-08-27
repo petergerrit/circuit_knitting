@@ -27,7 +27,7 @@ def load_data(filename):
 def plot_mass_scan():
     """Generate mass scan plot using Hank's style with error bars."""
     # Load data from run_mass_scan.py output
-    data = load_data("mass_scan_noiseless_eps0.05_shots1024.json")
+    data = load_data("mass_scan_noiseless_eps0p05_shots1024.json")
     
     time_steps = data["time_steps"]
     

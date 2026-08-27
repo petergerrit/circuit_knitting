@@ -10,6 +10,8 @@ Runs simulations for:
 - Noiseless (AerSimulator without hardware noise model)
 
 Total: 3 masses × 33 steps = 99 data points
+
+Data is written to file after each individual simulation.
 """
 
 import sys
@@ -43,6 +45,10 @@ epsilon = 0.05
 DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
 os.makedirs(DATA_DIR, exist_ok=True)
 
+# Output filename
+filename = f"mass_scan_noiseless_eps0p05_shots{num_shots}.json"
+filepath = os.path.join(DATA_DIR, filename)
+
 
 def run_noiseless_simulation(epsilon, mass, trotter_step, num_shots=1024):
     """
@@ -70,20 +76,34 @@ def run_noiseless_simulation(epsilon, mass, trotter_step, num_shots=1024):
     return fn, boot_err
 
 
+def save_data(all_data, time_steps, masses, epsilon, num_shots):
+    """Save current data to file."""
+    with open(filepath, 'w') as f:
+        json.dump({
+            "epsilon": epsilon,
+            "num_shots": num_shots,
+            "masses": masses,
+            "time_steps": time_steps,
+            "data": all_data
+        }, f, indent=2)
+
+
 def main():
-    """Run mass scan and save data."""
+    """Run mass scan and save data after each simulation."""
     all_data = {}
     
+    # Initialize data structure for all masses
     for mass in masses:
         mass_key = f"m{str(mass).replace('.', 'p')}"
         all_data[mass_key] = {
             "fermion_numbers": [],
             "bootstrap_errors": []
         }
+    
+    for mass in masses:
+        mass_key = f"m{str(mass).replace('.', 'p')}"
         
         for i, (trotter_step, t) in enumerate(zip(trotter_steps, time_steps)):
-            print(f"Running mass={mass}, trotter_step={trotter_step}, t={t}")
-            
             fn, boot_err = run_noiseless_simulation(
                 epsilon=epsilon,
                 mass=mass,
@@ -93,19 +113,9 @@ def main():
             
             all_data[mass_key]["fermion_numbers"].append(fn)
             all_data[mass_key]["bootstrap_errors"].append(boot_err)
-    
-    # Save data with time_steps only at top level
-    filename = f"mass_scan_noiseless_eps{epsilon}_shots{num_shots}.json"
-    with open(os.path.join(DATA_DIR, filename), 'w') as f:
-        json.dump({
-            "epsilon": epsilon,
-            "num_shots": num_shots,
-            "masses": masses,
-            "time_steps": time_steps,
-            "data": all_data
-        }, f, indent=2)
-    
-    print(f"Data saved to {filename}")
+            
+            # Save after each individual run
+            save_data(all_data, time_steps, masses, epsilon, num_shots)
 
 
 if __name__ == "__main__":
