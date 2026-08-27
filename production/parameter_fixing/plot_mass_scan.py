@@ -27,7 +27,7 @@ def load_data(filename):
 def plot_mass_scan():
     """Generate mass scan plot using Hank's style with error bars."""
     # Load data from run_mass_scan.py output
-    data = load_data("mass_scan_noiseless_eps0p05_shots1024.json")
+    data = load_data("mass_scan.json")
     
     time_steps = data["time_steps"]
     
@@ -50,12 +50,12 @@ def plot_mass_scan():
     
     plt.xlabel('evolution time')
     plt.ylabel('fermion number')
-    plt.title(f'$\epsilon = 0.05$, noiseless, {data["num_shots"]} shots')
+    plt.title(f'$\epsilon = {data["epsilon"]}$, noiseless, {data["num_shots"]} shots')
     plt.legend()
     plt.grid(True, alpha=0.3)
     plt.tight_layout()
     
-    output_file = os.path.join(PLOTS_DIR, 'mass_scan_noiseless.pdf')
+    output_file = os.path.join(PLOTS_DIR, 'mass_scan.pdf')
     plt.savefig(output_file)
     plt.close()
     

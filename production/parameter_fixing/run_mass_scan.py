@@ -31,6 +31,8 @@ from qiskit_ibm_runtime import SamplerV2
 Nqbits = 12
 insertion_point = 4
 num_shots = 1024
+epsilon = 0.05
+noiseless = True
 
 # Mass values
 masses = [1.0, 1.125, 1.25]
@@ -39,14 +41,12 @@ masses = [1.0, 1.125, 1.25]
 trotter_steps = [4 * i for i in range(33)]  # 0, 4, 8, ..., 128
 time_steps = [0.2 * i for i in range(33)]    # 0.0, 0.2, 0.4, ..., 6.4
 
-epsilon = 0.05
-
 # Data directory
 DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
 os.makedirs(DATA_DIR, exist_ok=True)
 
 # Output filename
-filename = f"mass_scan_noiseless_eps0p05_shots{num_shots}.json"
+filename = "mass_scan.json"
 filepath = os.path.join(DATA_DIR, filename)
 
 
@@ -76,10 +76,11 @@ def run_noiseless_simulation(epsilon, mass, trotter_step, num_shots=1024):
     return fn, boot_err
 
 
-def save_data(all_data, time_steps, masses, epsilon, num_shots):
+def save_data(all_data, time_steps, masses, epsilon, num_shots, noiseless):
     """Save current data to file."""
     with open(filepath, 'w') as f:
         json.dump({
+            "noiseless": noiseless,
             "epsilon": epsilon,
             "num_shots": num_shots,
             "masses": masses,
@@ -115,7 +116,7 @@ def main():
             all_data[mass_key]["bootstrap_errors"].append(boot_err)
             
             # Save after each individual run
-            save_data(all_data, time_steps, masses, epsilon, num_shots)
+            save_data(all_data, time_steps, masses, epsilon, num_shots, noiseless)
 
 
 if __name__ == "__main__":
