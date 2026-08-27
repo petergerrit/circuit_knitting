@@ -7,7 +7,7 @@ Produces two curves:
 - Curve 2: mixed trotter steps and epsilons, 9 points
 Total: 18 data points
 
-Each point calculated with 1024 shots, noiseless simulation.
+Each point calculated with 1048576 shots, noiseless simulation.
 Bootstrap error is stored for each point.
 Data is saved sequentially after each run.
 """
@@ -28,7 +28,7 @@ from qiskit_ibm_runtime import SamplerV2
 # Configuration
 Nqbits = 12
 insertion_point = 4
-num_shots = 1024
+num_shots = 1024 ** 2
 
 # Data directory
 DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
@@ -38,7 +38,7 @@ os.makedirs(DATA_DIR, exist_ok=True)
 OUTPUT_FILE = os.path.join(DATA_DIR, "trotter_comp.json")
 
 
-def run_noiseless_simulation(epsilon, mass, trotter_step, num_shots=1024, seed=None):
+def run_noiseless_simulation(epsilon, mass, trotter_step, num_shots=1024 ** 2, seed=None):
     """
     Run a single noiseless simulation for given parameters.
     Returns (fermion_number, bootstrap_error).
@@ -116,7 +116,6 @@ def main():
     }
     
     # Run Curve 1 (9 points)
-    print("Running Curve 1 (epsilon=0.05, 9 points)...")
     for i, trotter_step in enumerate(trotter_steps_curve1):
         time = trotter_step * 0.05
         seed = random.randint(0, 2**31 - 1)
@@ -139,11 +138,8 @@ def main():
         
         # Save after each point
         save_data(all_data, OUTPUT_FILE)
-        print(f"  Point {i+1}/9: trotter_step={trotter_step}, time={time:.1f}, "
-              f"FN={fn:.6f}, BE={boot_err:.6f}")
     
     # Run Curve 2 (9 points)
-    print("\nRunning Curve 2 (mixed parameters, 9 points)...")
     for i, params in enumerate(curve2_points):
         seed = random.randint(0, 2**31 - 1)
         
@@ -166,11 +162,7 @@ def main():
         
         # Save after each point
         save_data(all_data, OUTPUT_FILE)
-        print(f"  Point {i+1}/9: trotter_step={params['trotter_step']}, "
-              f"epsilon={params['epsilon']:.1f}, time={params['time']:.1f}, "
-              f"FN={fn:.6f}, BE={boot_err:.6f}")
     
-    print(f"\nAll 18 points complete. Data saved to: {OUTPUT_FILE}")
 
 
 if __name__ == "__main__":

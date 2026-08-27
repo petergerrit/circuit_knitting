@@ -1,5 +1,5 @@
 {
-  "num_shots": 1024,
+  "num_shots": 1048576,
   "noiseless": true,
   "Nqbits": 12,
   "insertion_point": 4,
@@ -10,65 +10,65 @@
       {
         "trotter_step": 0,
         "time": 0.0,
-        "fermion_number": 0.5205078125,
-        "bootstrap_error": 0.01505346307293711,
-        "seed": 1224149219
+        "fermion_number": 0.5001239776611328,
+        "bootstrap_error": 0.00047472863542183635,
+        "seed": 1010450452
       },
       {
         "trotter_step": 4,
         "time": 0.2,
-        "fermion_number": 0.5068359375,
-        "bootstrap_error": 0.01589518595819212,
-        "seed": 989966139
+        "fermion_number": 0.5011472702026367,
+        "bootstrap_error": 0.00044261504263427907,
+        "seed": 1309987885
       },
       {
         "trotter_step": 8,
         "time": 0.4,
-        "fermion_number": 0.4814453125,
-        "bootstrap_error": 0.014466378398665944,
-        "seed": 501330098
+        "fermion_number": 0.5046424865722656,
+        "bootstrap_error": 0.0005085127717608436,
+        "seed": 1097255406
       },
       {
         "trotter_step": 12,
         "time": 0.6000000000000001,
-        "fermion_number": 0.5263671875,
-        "bootstrap_error": 0.01597786075008698,
-        "seed": 549175627
+        "fermion_number": 0.5105161666870117,
+        "bootstrap_error": 0.00048148141328615944,
+        "seed": 1313028396
       },
       {
         "trotter_step": 16,
         "time": 0.8,
-        "fermion_number": 0.494140625,
-        "bootstrap_error": 0.014438796080174865,
-        "seed": 781099663
+        "fermion_number": 0.5166330337524414,
+        "bootstrap_error": 0.0004419106442774921,
+        "seed": 1173352836
       },
       {
         "trotter_step": 20,
         "time": 1.0,
-        "fermion_number": 0.5185546875,
-        "bootstrap_error": 0.015313409272269813,
-        "seed": 1068329802
+        "fermion_number": 0.5232276916503906,
+        "bootstrap_error": 0.00046238691776577756,
+        "seed": 2008978578
       },
       {
         "trotter_step": 24,
         "time": 1.2000000000000002,
-        "fermion_number": 0.521484375,
-        "bootstrap_error": 0.0160423866539759,
-        "seed": 1761346679
+        "fermion_number": 0.5284299850463867,
+        "bootstrap_error": 0.0005200392230590021,
+        "seed": 14651257
       },
       {
         "trotter_step": 28,
         "time": 1.4000000000000001,
-        "fermion_number": 0.5224609375,
-        "bootstrap_error": 0.016551959444434227,
-        "seed": 2025385658
+        "fermion_number": 0.5337190628051758,
+        "bootstrap_error": 0.0004970251342064062,
+        "seed": 804228456
       },
       {
         "trotter_step": 32,
         "time": 1.6,
-        "fermion_number": 0.5439453125,
-        "bootstrap_error": 0.015788001702945715,
-        "seed": 1631622664
+        "fermion_number": 0.5356912612915039,
+        "bootstrap_error": 0.0005002773922028617,
+        "seed": 2111109876
       }
     ]
   },
@@ -79,73 +79,73 @@
         "trotter_step": 0,
         "epsilon": 0.1,
         "time": 0.0,
-        "fermion_number": 0.5009765625,
-        "bootstrap_error": 0.015637336438586807,
-        "seed": 1338484129
+        "fermion_number": 0.5009965896606445,
+        "bootstrap_error": 0.0004839327276908283,
+        "seed": 192538766
       },
       {
         "trotter_step": 1,
         "epsilon": 0.2,
         "time": 0.2,
-        "fermion_number": 0.4990234375,
-        "bootstrap_error": 0.01649324440652799,
-        "seed": 1876862299
+        "fermion_number": 0.501434326171875,
+        "bootstrap_error": 0.000526050739466864,
+        "seed": 28824073
       },
       {
         "trotter_step": 1,
         "epsilon": 0.4,
         "time": 0.4,
-        "fermion_number": 0.4921875,
-        "bootstrap_error": 0.01748677162469528,
-        "seed": 64091594
+        "fermion_number": 0.5049915313720703,
+        "bootstrap_error": 0.0005537610794241758,
+        "seed": 230071232
       },
       {
         "trotter_step": 1,
         "epsilon": 0.6,
         "time": 0.6,
-        "fermion_number": 0.484375,
-        "bootstrap_error": 0.015290810930940884,
-        "seed": 222111930
+        "fermion_number": 0.5102329254150391,
+        "bootstrap_error": 0.00048811246322099,
+        "seed": 403127466
       },
       {
         "trotter_step": 1,
         "epsilon": 0.8,
         "time": 0.8,
-        "fermion_number": 0.5341796875,
-        "bootstrap_error": 0.014778394879018334,
-        "seed": 1651049043
+        "fermion_number": 0.5182561874389648,
+        "bootstrap_error": 0.0004892177091696549,
+        "seed": 531855946
       },
       {
         "trotter_step": 2,
         "epsilon": 0.5,
         "time": 1.0,
-        "fermion_number": 0.5595703125,
-        "bootstrap_error": 0.01663047516805174,
-        "seed": 676683036
+        "fermion_number": 0.5245084762573242,
+        "bootstrap_error": 0.00047535514122093117,
+        "seed": 751613250
       },
       {
         "trotter_step": 2,
         "epsilon": 0.6,
         "time": 1.2,
-        "fermion_number": 0.5263671875,
-        "bootstrap_error": 0.01686265281794634,
-        "seed": 854235723
+        "fermion_number": 0.5306882858276367,
+        "bootstrap_error": 0.0004453786856310497,
+        "seed": 34356405
       },
       {
         "trotter_step": 2,
         "epsilon": 0.7,
         "time": 1.4,
-        "fermion_number": 0.55078125,
-        "bootstrap_error": 0.01485851958467084,
-        "seed": 320130907
+        "fermion_number": 0.5361289978027344,
+        "bootstrap_error": 0.00054681609965588,
+        "seed": 899399018
       },
       {
         "trotter_step": 2,
         "epsilon": 0.8,
         "time": 1.6,
-        "fermion_number": 0.5380859375,
-        "bootstrap_error": 0.01608292298789983,
-        "seed": 1026878655
+        "fermion_number": 0.5399065017700195,
+        "bootstrap_error": 0.0004742724285031857,
+        "seed": 1018248231
       }
     ]
   }

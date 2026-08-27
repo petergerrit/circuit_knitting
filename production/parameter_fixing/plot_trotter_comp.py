@@ -51,13 +51,13 @@ def main():
     plt.scatter(times1, ferm_nums1, color=hank_blue)
     plt.errorbar(times1, ferm_nums1, boot_errors1, alpha=0.2, ls='none', color=hank_blue)
     plt.plot(times1, ferm_nums1, color=hank_blue, 
-             label=f'Curve 1: $\epsilon=0.05$, trotter_steps=[0,4,...,32]')
+             label=rf'Curve 1: $\epsilon=0.05$, trotter_steps=[0,4,...,32]')
     
     # Hank's style: scatter + errorbar + plot for Curve 2 (orange)
     plt.scatter(times2, ferm_nums2, color=hank_orange)
     plt.errorbar(times2, ferm_nums2, boot_errors2, alpha=0.2, ls='none', color=hank_orange)
     plt.plot(times2, ferm_nums2, color=hank_orange, 
-             label='Curve 2: mixed trotter steps and $\epsilon$')
+             label=r'Curve 2: mixed trotter steps and $\epsilon$')
     
     plt.xlabel('time')
     plt.ylabel('mean fermion number')
