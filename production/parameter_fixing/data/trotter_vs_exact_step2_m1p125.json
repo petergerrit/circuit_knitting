@@ -1,0 +1,89 @@
+{
+  "epsilon": 0.005,
+  "mass": 1.125,
+  "trotter_step": 2,
+  "exact": [
+    {
+      "fermion_number": 0.51129150390625,
+      "bootstrap_error": 0.0037245316219765737
+    },
+    {
+      "fermion_number": 0.530517578125,
+      "bootstrap_error": 0.003782402556501128
+    },
+    {
+      "fermion_number": 0.51080322265625,
+      "bootstrap_error": 0.004196035198569511
+    },
+    {
+      "fermion_number": 0.50958251953125,
+      "bootstrap_error": 0.004384332095933434
+    },
+    {
+      "fermion_number": 0.508544921875,
+      "bootstrap_error": 0.003932311666408315
+    },
+    {
+      "fermion_number": 0.5172119140625,
+      "bootstrap_error": 0.003864459366322452
+    },
+    {
+      "fermion_number": 0.515869140625,
+      "bootstrap_error": 0.0037720462828922424
+    },
+    {
+      "fermion_number": 0.5458984375,
+      "bootstrap_error": 0.003875290252213177
+    },
+    {
+      "fermion_number": 0.5152587890625,
+      "bootstrap_error": 0.003898460441628877
+    },
+    {
+      "fermion_number": 0.49798583984375,
+      "bootstrap_error": 0.0033914158070290547
+    }
+  ],
+  "trotter": [
+    {
+      "fermion_number": 0.5133950209297197,
+      "bootstrap_error": 0.004175487261737079
+    },
+    {
+      "fermion_number": 0.5175826936058642,
+      "bootstrap_error": 0.004629331480686652
+    },
+    {
+      "fermion_number": 0.5258070136894977,
+      "bootstrap_error": 0.004586559459809768
+    },
+    {
+      "fermion_number": 0.5005822183661354,
+      "bootstrap_error": 0.004616464359758898
+    },
+    {
+      "fermion_number": 0.4957110027379809,
+      "bootstrap_error": 0.00492866743751469
+    },
+    {
+      "fermion_number": 0.5096191402192247,
+      "bootstrap_error": 0.0042975381859596835
+    },
+    {
+      "fermion_number": 0.5166161130428358,
+      "bootstrap_error": 0.00431893542142874
+    },
+    {
+      "fermion_number": 0.5019948324340745,
+      "bootstrap_error": 0.004744413533690597
+    },
+    {
+      "fermion_number": 0.5028005474642584,
+      "bootstrap_error": 0.004393502178501567
+    },
+    {
+      "fermion_number": 0.5032981781855063,
+      "bootstrap_error": 0.004864096056230856
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "epsilon": 0.005,
+  "mass": 1.25,
+  "trotter_step": 1,
+  "results": [
+    {
+      "fermion_number": 0.5029296875,
+      "bootstrap_error": 0.003803243302281768
+    },
+    {
+      "fermion_number": 0.517578125,
+      "bootstrap_error": 0.003953811065788381
+    },
+    {
+      "fermion_number": 0.49786376953125,
+      "bootstrap_error": 0.003582118481537967
+    },
+    {
+      "fermion_number": 0.50543212890625,
+      "bootstrap_error": 0.004356737636258034
+    },
+    {
+      "fermion_number": 0.49969482421875,
+      "bootstrap_error": 0.0036914350619528854
+    },
+    {
+      "fermion_number": 0.52215576171875,
+      "bootstrap_error": 0.0037453958440012906
+    },
+    {
+      "fermion_number": 0.49212646484375,
+      "bootstrap_error": 0.004054007272863898
+    },
+    {
+      "fermion_number": 0.51812744140625,
+      "bootstrap_error": 0.003969079137280243
+    },
+    {
+      "fermion_number": 0.52001953125,
+      "bootstrap_error": 0.003862928299166119
+    },
+    {
+      "fermion_number": 0.50665283203125,
+      "bootstrap_error": 0.0047080842102726695
+    }
+  ]
+}
